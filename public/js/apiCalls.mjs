@@ -81,7 +81,7 @@ export const loadHighValue = async () => {
 // read missing availiability data from db api
 export const loadMissingAvailiability = async () => {
   const response = await fetch(
-    `https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/high_value`,
+    `https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/missing_availability`,
   );
   const data = await response.json();
   return data.data;
