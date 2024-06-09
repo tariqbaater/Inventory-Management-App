@@ -1,5 +1,4 @@
-Dukan Inventory Management Application
-===================================================================
+# Dukan Inventory Management Application
 
 Created with ❤️ by [Tariq Baater](https://github.com/tariqbaater)
 
@@ -21,12 +20,14 @@ npm install --save dotenv
 npm install --save fs-extra
 npm install --save path
 npm install --save nodemon
+npm install @sqlitecloud/drivers
 ```
 
-### Run
+### Build App and Run
 
-It is dependant on your package.json file configuration.
+It is dependant on your package.json file configuration. see [example](https://github.com/tariqbaater/sqlitecloud/blob/main/package.json)
 
 ```bash
-npm run start
+npm install
+npm start
 ```
