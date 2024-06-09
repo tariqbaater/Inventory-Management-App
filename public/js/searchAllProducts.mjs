@@ -97,6 +97,7 @@ export const dashBoard = () => {
     const vsBudget = data.vsbudget + "%";
     const percentage = data.percentage + "%";
     const salesBudget = data.totalsalesbudget.toLocaleString();
+
     // const inventory = data.DaysSince;
     const span = document.createElement("span");
     const span2 = document.createElement("span");

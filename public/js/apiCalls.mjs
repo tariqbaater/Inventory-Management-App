@@ -35,23 +35,29 @@ export const loadData = async (query) => {
 
 // read top products data from db api
 export const loadKvi = async () => {
-  const response = await fetch(`http://localhost:8080/kvi/`);
+  const response = await fetch(
+    `https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/kvi`,
+  );
   const data = await response.json();
-  return data;
+  return data.data[0];
 };
 
 // read total sales data from db api
 export const loadWastePercentage = async () => {
-  const response = await fetch(`http://localhost:8080/sales/`);
+  const response = await fetch(
+    `https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/waste_percentage`,
+  );
   const data = await response.json();
-  return data;
+  return data.data[0];
 };
 
 // read writeoff data from db api
 export const loadWriteOff = async () => {
-  const response = await fetch(`http://localhost:8080/writeoff/`);
+  const response = await fetch(
+    `https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/write_off`,
+  );
   const data = await response.json();
-  return data;
+  return data.data[0];
 };
 // read high value data from db api
 export const loadHighValue = async () => {
