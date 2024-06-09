@@ -40,7 +40,9 @@ app.use(express.json());
 // export csv file using json2csv
 app.get("/high_value_csv", async (_req, res) => {
   const loadHighValue = async () => {
-    const response = await fetch(`http://localhost:8080/high_value/`);
+    const response = await fetch(
+      `https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/high_value`,
+    );
     const data = await response.json();
     return data;
   };
@@ -57,7 +59,9 @@ app.get("/high_value_csv", async (_req, res) => {
 //export csv file using json2csv
 app.get("/writeoff_csv", async (_req, res) => {
   const loadWriteOff = async () => {
-    const response = await fetch(`http://localhost:8080/writeoff/`);
+    const response = await fetch(
+      `https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/write_off`,
+    );
     const data = await response.json();
     return data;
   };
@@ -74,7 +78,9 @@ app.get("/writeoff_csv", async (_req, res) => {
 // get missing availability report
 app.get("/missing_availability_csv/", async (_req, res) => {
   const loadMissingAvailiability = async () => {
-    const response = await fetch(`http://localhost:8080/missing_availability/`);
+    const response = await fetch(
+      `https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/high_value`,
+    );
     const data = await response.json();
     return data;
   };
