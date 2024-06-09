@@ -44,7 +44,7 @@ app.get("/high_value_csv", async (_req, res) => {
       `https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/high_value`,
     );
     const data = await response.json();
-    return data;
+    return data.data;
   };
 
   loadHighValue().then((data) => {
@@ -63,7 +63,7 @@ app.get("/writeoff_csv", async (_req, res) => {
       `https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/write_off`,
     );
     const data = await response.json();
-    return data;
+    return data.data;
   };
 
   loadWriteOff().then((data) => {
@@ -82,7 +82,7 @@ app.get("/missing_availability_csv/", async (_req, res) => {
       `https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/high_value`,
     );
     const data = await response.json();
-    return data;
+    return data.data;
   };
 
   loadMissingAvailiability().then((data) => {
