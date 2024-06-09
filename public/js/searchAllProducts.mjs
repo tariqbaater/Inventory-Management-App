@@ -92,11 +92,11 @@ export const dashBoard = () => {
   indexMjs.salesBudgetDiv.innerHTML = "";
   indexMjs.inventoryDayDiv.innerHTML = "";
   apiCallsMjs.loadWastePercentage().then((data) => {
-    const totalSalesdata = data.totalsales;
-    const averageSales = data.Avg_Sales;
+    const totalSalesdata = parseFloat(data.totalsales).toFixed(2) + " SAR";
+    const averageSales = ParseFloat(data.Avg_Sales).toFixed(2) + " SAR";
     const vsBudget = data.vsbudget + "%";
     const percentage = data.percentage + "%";
-    const salesBudget = data.totalsalesbudget;
+    const salesBudget = ParseFloat(data.salesbudget).toFixed(2) + " SAR"; //data.totalsalesbudget;
     // const inventory = data.DaysSince;
     const span = document.createElement("span");
     const span2 = document.createElement("span");
