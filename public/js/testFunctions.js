@@ -43,9 +43,9 @@ export const topProducts = () => {
 // console.log(await mainSheet(1, 10));
 
 // get the keys of the first object in the array, which can be used to create the table heade
-export const loadHighValue = async () => {
+export const loadHighValue = async (id) => {
   const response = await fetch(
-    `https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/missing_availability`,
+    `https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/dsd_deliveries?id=${id}`,
   );
   const data = await response.json();
   return data.data;
@@ -60,4 +60,4 @@ export const loadHighValue = async () => {
 //   const data = await func();
 //   return Object.values(data[0]);
 // };
-console.log(await loadHighValue());
+console.log(await loadHighValue(15));

@@ -1,36 +1,46 @@
 //*********** API *************
 // read history data from db api
 export async function historyData(id) {
-  const response = await fetch(`http://localhost:8080/history/${id}`);
+  const response = await fetch(
+    `https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/item_history?id=${id}`,
+  );
   const data = await response.json();
-  return data;
+  return data.data;
 }
 // read dry_delivery data from db api
 export const deliveryData = async (id) => {
-  const response = await fetch(`http://localhost:8080/dry_delivery/${id}`);
+  const response = await fetch(
+    `https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/wh_delivery?id=${id}`,
+  );
   const data = await response.json();
-  return data;
+  return data.data;
 };
 
 // read dsd_delivery data from db api
 export const dsdDelivery = async (id) => {
-  const response = await fetch(`http://localhost:8080/dsd_delivery/${id}`);
+  const response = await fetch(
+    `https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/dsd_deliveries?id=${id}`,
+  );
   const data = await response.json();
-  return data;
+  return data.data;
 };
 
 // read sales history data from db api
 export const salesHistory = async (id) => {
-  const response = await fetch(`http://localhost:8080/sales_history/${id}`);
+  const response = await fetch(
+    `https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/sales_history?id=${id}`,
+  );
   const data = await response.json();
-  return data;
+  return data.data;
 };
 
 // read search data from db api
-export const loadData = async (query) => {
-  const response = await fetch(`http://localhost:8080/search?q=${query}`);
+export const loadData = async () => {
+  const response = await fetch(
+    `https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/search_products`,
+  );
   const data = await response.json();
-  return data;
+  return data.data;
 };
 
 // read top products data from db api
