@@ -45,10 +45,10 @@ export const topProducts = () => {
 // get the keys of the first object in the array, which can be used to create the table heade
 export const loadHighValue = async () => {
   const response = await fetch(
-    `https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/kvi`,
+    `https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/write_off`,
   );
   const data = await response.json();
-  return data.data[0];
+  return data.data;
 };
 
 // export const getKeys = async (func) => {
