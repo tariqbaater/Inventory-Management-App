@@ -57,7 +57,7 @@ export const loadWriteOff = async () => {
     `https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/write_off`,
   );
   const data = await response.json();
-  return data.data[0];
+  return data.data;
 };
 // read high value data from db api
 export const loadHighValue = async () => {
