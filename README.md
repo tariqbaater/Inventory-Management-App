@@ -2,6 +2,18 @@
 
 Created with ❤️ by [Tariq Baater](https://github.com/tariqbaater)
 
+## Preview of the web application dashboard
+
+https://github.com/tariqbaater/sqlitecloud/assets/23321048/e8ea6706-5d5e-4d72-a522-28bd3758866d
+
+## Preview of how to check item history
+
+https://github.com/tariqbaater/sqlitecloud/assets/23321048/19e33bce-89a2-4bfa-adcf-0c0a0ccfa098
+
+## Preview of how to search products in real time
+
+https://github.com/tariqbaater/sqlitecloud/assets/23321048/f5fbded3-5646-4d37-96db-cb44d0a29a97
+
 ## Description
 
 Dukan Inventory Management Application is a web application that i created to manage my store inventory,
