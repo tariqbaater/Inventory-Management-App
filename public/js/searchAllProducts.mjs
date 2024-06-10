@@ -133,7 +133,7 @@ export const writeOff = () => {
   indexMjs.printBtnDiv.style.display = "flex";
   indexMjs.printBtnDiv.innerHTML = `
     <div class="print-btn-container">
-     <a href="http://127.0.0.1:8080/writeoff_csv" class="download-btn">
+     <a href="https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/write_off" class="download-btn">
         <button class="print-btn">
           <i class="fa-solid fa-print"></i> Print Report
         </button></a>
@@ -194,7 +194,7 @@ export const missingAvailiabilityReport = () => {
   indexMjs.printBtnDiv.style.display = "flex";
   indexMjs.printBtnDiv.innerHTML = `
     <div class="print-btn-container">
-     <a href="http://127.0.0.1:8080/missing_availability_csv" class="download-btn">
+     <a href="https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/missing_availability" class="download-btn">
         <button class="print-btn">
           <i class="fa-solid fa-print"></i> Print Report
         </button></a>
