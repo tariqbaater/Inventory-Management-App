@@ -17,7 +17,8 @@ https://github.com/tariqbaater/sqlitecloud/assets/23321048/f5fbded3-5646-4d37-96
 ## Description
 
 Dukan Inventory Management Application is a web application that i created to manage my store inventory,
-it is a simple inventory management application that i created using Node.js, Express, and MySQL.
+it is a simple Inventory Management Application that i created using Node.js, Express, and sqlite Cloud.
+Fork the repo and follow the below instructions to build and run the application.
 
 ## Getting Started
 
