@@ -142,6 +142,7 @@ export const writeOff = () => {
   indexMjs.table.innerHTML = "";
   const theaderRow = ["Item No", "Description", "Qty", "Totals"];
   indexMjs.createThead(theaderRow);
+  let data = data.data;
   apiCallsMjs.loadWriteOff().then((data) => {
     for (const item of data) {
       indexMjs.createRow([
@@ -150,11 +151,6 @@ export const writeOff = () => {
         item.QtyPCs,
         item.TotalPrice,
       ]);
-      if (item.ItemNo === "TOTAL") {
-        document.querySelector(".table-row").style.fontWeight = "700";
-        document.querySelector(".table-row").style.fontSize = "18px";
-        document.querySelector(".table-row").style.color = "red";
-      }
     }
   });
 };
@@ -173,6 +169,7 @@ export const highValueReport = () => {
     "Value",
   ];
   indexMjs.createThead(theaderRow);
+  let data = data.data;
   apiCallsMjs.loadHighValue().then((data) => {
     for (const item of data) {
       indexMjs.createRow([
@@ -203,6 +200,7 @@ export const missingAvailiabilityReport = () => {
   indexMjs.table.innerHTML = "";
   const theaderRow = ["Item No", "Description", "Category", "VPE", "Stock"];
   indexMjs.createThead(theaderRow);
+  let data = data.data;
   apiCallsMjs.loadMissingAvailiability().then((data) => {
     for (const item of data) {
       indexMjs.createRow([
