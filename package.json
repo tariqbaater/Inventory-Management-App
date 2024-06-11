@@ -9,6 +9,9 @@
   },
   "keywords": [],
   "author": "",
+  "engines": {
+    "node": "v22.2.0"
+  },
   "license": "ISC",
   "dependencies": {
     "@json2csv/node": "^7.0.4",
