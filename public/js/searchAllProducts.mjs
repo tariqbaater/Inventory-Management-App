@@ -164,22 +164,13 @@ export const highValueReport = () => {
   indexMjs.searchDiv3.style.display = "block";
   indexMjs.printBtnDiv.style.display = "flex";
   indexMjs.table.innerHTML = "";
-  const theaderRow = [
-    "Item No",
-    "Description",
-    "Opening",
-    "Sales",
-    "Physical",
-    "Value",
-  ];
+  const theaderRow = ["Item No", "Description", "Qty", "Value"];
   indexMjs.createThead(theaderRow);
   apiCallsMjs.loadHighValue().then((data) => {
     for (const item of data) {
       indexMjs.createRow([
         item.ItemNo,
         item.Description,
-        item.Opening,
-        item.Sales,
         item.physical_qty,
         item.value,
       ]);
@@ -201,17 +192,11 @@ export const missingAvailiabilityReport = () => {
     </div>
 `;
   indexMjs.table.innerHTML = "";
-  const theaderRow = ["Item No", "Description", "Category", "VPE", "Stock"];
+  const theaderRow = ["Item No", "Description", "Stock"];
   indexMjs.createThead(theaderRow);
   apiCallsMjs.loadMissingAvailiability().then((data) => {
     for (const item of data) {
-      indexMjs.createRow([
-        item.ItemNo,
-        item.Description,
-        item.ItemCategory,
-        item.PcsPerCarton,
-        item.stock,
-      ]);
+      indexMjs.createRow([item.ItemNo, item.Description, item.stock]);
     }
   });
 };
