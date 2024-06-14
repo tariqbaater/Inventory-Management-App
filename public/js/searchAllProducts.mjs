@@ -133,7 +133,7 @@ export const writeOff = () => {
     indexMjs.printBtnDiv.style.display = "flex";
     indexMjs.printBtnDiv.innerHTML = `
     <div class="print-btn-container">
-     <a href="https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/write_off" class="download-btn">
+     <a href="https://retail-inventory-app.onrender.com/writeoff_csv" class="download-btn">
         <button class="print-btn">
           <i class="fa-solid fa-print"></i> Print Report
         </button></a>
@@ -163,7 +163,15 @@ export const highValueReport = () => {
     indexMjs.searchHistory.style.display = "none";
     indexMjs.searchDiv3.style.display = "block";
     indexMjs.printBtnDiv.style.display = "flex";
-    indexMjs.table.innerHTML = "";
+    indexMjs.table.innerHTML = `
+        <div class="print-btn-container">
+     <a href="https://retail-inventory-app.onrender.com/high_value_csv" class="download-btn">
+        <button class="print-btn">
+          <i class="fa-solid fa-print"></i> Print Report
+        </button></a>
+    </div>
+
+    `;
     const theaderRow = ["Item No", "Description", "Qty", "Value"];
     indexMjs.createThead(theaderRow);
     apiCallsMjs.loadHighValue().then((data) => {
@@ -185,7 +193,7 @@ export const missingAvailiabilityReport = () => {
     indexMjs.printBtnDiv.style.display = "flex";
     indexMjs.printBtnDiv.innerHTML = `
     <div class="print-btn-container">
-     <a href="https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/missing_availability" class="download-btn">
+     <a href="https://retail-inventory-app.onrender.com/missing_availability_csv" class="download-btn">
         <button class="print-btn">
           <i class="fa-solid fa-print"></i> Print Report
         </button></a>
