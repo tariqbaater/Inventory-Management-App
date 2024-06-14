@@ -150,11 +150,6 @@ export const writeOff = () => {
                 item.QtyPCs,
                 item.TotalPrice,
             ]);
-            if (item.ItemNo === "TOTAL") {
-                document.querySelector(".table-row").style.fontWeight = "700";
-                document.querySelector(".table-row").style.fontSize = "18px";
-                document.querySelector(".table-row").style.color = "red";
-            }
         }
     });
 };
@@ -163,7 +158,7 @@ export const highValueReport = () => {
     indexMjs.searchHistory.style.display = "none";
     indexMjs.searchDiv3.style.display = "block";
     indexMjs.printBtnDiv.style.display = "flex";
-    indexMjs.table.innerHTML = `
+    indexMjs.printBtnDiv.innerHTML = `
         <div class="print-btn-container">
      <a href="https://retail-inventory-app.onrender.com/high_value_csv" class="download-btn">
         <button class="print-btn">
@@ -172,6 +167,7 @@ export const highValueReport = () => {
     </div>
 
     `;
+    indexMjs.table.innerHTML = "";
     const theaderRow = ["Item No", "Description", "Qty", "Value"];
     indexMjs.createThead(theaderRow);
     apiCallsMjs.loadHighValue().then((data) => {
