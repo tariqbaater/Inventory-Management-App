@@ -4,9 +4,6 @@ import path from "path";
 import cors from "cors";
 import { Parser } from "json2csv";
 
-// imports from local files
-import * as dbJs from "./db.js";
-
 // initialize express
 const app = express();
 // set port
@@ -96,96 +93,6 @@ app.get("/missing_availability_csv/", async (_req, res) => {
         res.send(csv);
     });
 });
-
-// get history procedure
-app.get("/history/:id", async (req, res) => {
-    // check if id is an integer
-    if (!Number.isInteger(parseInt(req.params.id))) {
-        res.status(400).send("Invalid item number");
-        return;
-    } else {
-        const { id } = req.params;
-        const dukan = await dbJs.readData(id);
-        res.send(dukan);
-    }
-});
-
-// get dry_delivey
-app.get("/dry_delivery/:id", async (req, res) => {
-    // check if id is an integer
-    if (!Number.isInteger(parseInt(req.params.id))) {
-        res.status(400).send("Invalid item number");
-        return;
-    } else {
-        const { id } = req.params;
-        const dukan = await dbJs.dryDelivery(id);
-        res.send(dukan);
-    }
-});
-
-// get dsd_delivery
-app.get("/dsd_delivery/:id", async (req, res) => {
-    // check if id is an integer
-    if (!Number.isInteger(parseInt(req.params.id))) {
-        res.status(400).send("Invalid item number");
-        return;
-    } else {
-        const { id } = req.params;
-        const dukan = await dbJs.dsdDelivery(id);
-        res.send(dukan);
-    }
-});
-
-// get sales history
-app.get("/sales_history/:id", async (req, res) => {
-    // check if id is an integer
-    if (!Number.isInteger(parseInt(req.params.id))) {
-        res.status(400).send("Invalid item number");
-        return;
-    } else {
-        const { id } = req.params;
-        const dukan = await dbJs.salesHistory(id);
-        res.send(dukan);
-    }
-});
-
-// search all products
-app.get("/search", async (req, res) => {
-    const { q } = req.query;
-    const dukan = await dbJs.searchTable(q);
-    res.send(dukan);
-});
-
-// get top products
-app.get("/kvi/", async (_req, res) => {
-    const dukan = await dbJs.kvi();
-    res.send(dukan[0]);
-});
-
-// get total sales
-app.get("/sales/", async (_req, res) => {
-    const dukan = await dbJs.wastePercentage();
-    res.send(dukan[0]);
-});
-
-// get writeoff totals
-app.get("/writeoff/", async (_req, res) => {
-    const dukan = await dbJs.writeOff();
-    res.send(dukan);
-});
-
-// get high value products
-app.get("/high_value/", async (_req, res) => {
-    const dukan = await dbJs.highValue();
-    res.send(dukan);
-});
-
-// get missing availability
-app.get("/missing_availability/", async (_req, res) => {
-    const dukan = await dbJs.missingAvailability();
-    res.send(dukan);
-});
-
 // catch errors
 app.use((err, res) => {
     console.error(err.stack);
