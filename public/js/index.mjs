@@ -83,6 +83,11 @@ window.onload = () => {
     if (localStorage.getItem("loggedIn") === "true") {
         navbar.style.display = "block";
         modal.style.display = "none";
+        printBtnDiv.style.display = "none";
+        searchDiv3.style.display = "none";
+        searchDiv2.style.display = "none";
+        searchHistory.style.display = "none";
+        table.innerHTML = "";
         searchAllProductsMjs.dashBoard();
     } else {
         modal.style.display = "block";
