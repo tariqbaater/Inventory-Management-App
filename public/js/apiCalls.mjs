@@ -1,88 +1,41 @@
+
 //*********** API *************
-// read history data from db api
-export async function historyData(id) {
-  const response = await fetch(
-    `https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/item_history?id=${id}`,
-  );
-  const data = await response.json();
-  return data.data;
-}
-// read dry_delivery data from db api
-export const deliveryData = async (id) => {
-  const response = await fetch(
-    `https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/wh_delivery?id=${id}`,
-  );
-  const data = await response.json();
-  return data.data;
+// Base URL for the API
+const BASE_URL = 'https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions';
+
+// Generic function to fetch data from the API
+const fetchData = async (endpoint, params = '') => {
+    const response = await fetch(`${BASE_URL}/${endpoint}${params}`);
+    const data = await response.json();
+    return data.data;
 };
 
-// read dsd_delivery data from db api
-export const dsdDelivery = async (id) => {
-  const response = await fetch(
-    `https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/dsd_deliveries?id=${id}`,
-  );
-  const data = await response.json();
-  return data.data;
-};
+// Read history data from db api
+export const historyData = (id) => fetchData('item_history', `?id=${id}`);
 
-// read sales history data from db api
-export const salesHistory = async (id) => {
-  const response = await fetch(
-    `https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/sales_history?id=${id}`,
-  );
-  const data = await response.json();
-  return data.data;
-};
+// Read dry delivery data from db api
+export const deliveryData = (id) => fetchData('wh_delivery', `?id=${id}`);
 
-// read search data from db api
-export const loadData = async () => {
-  const response = await fetch(
-    `https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/search_products`,
-  );
-  const data = await response.json();
-  return data.data;
-};
+// Read DSD delivery data from db api
+export const dsdDelivery = (id) => fetchData('dsd_deliveries', `?id=${id}`);
 
-// read top products data from db api
-export const loadKvi = async () => {
-  const response = await fetch(
-    `https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/kvi`,
-  );
-  const data = await response.json();
-  return data.data[0];
-};
+// Read sales history data from db api
+export const salesHistory = (id) => fetchData('sales_history', `?id=${id}`);
 
-// read total sales data from db api
-export const loadWastePercentage = async () => {
-  const response = await fetch(
-    `https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/waste_percentage`,
-  );
-  const data = await response.json();
-  return data.data[0];
-};
+// Read search data from db api
+export const loadData = () => fetchData('search_products');
 
-// read writeoff data from db api
-export const loadWriteOff = async () => {
-  const response = await fetch(
-    `https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/write_off`,
-  );
-  const data = await response.json();
-  return data.data;
-};
-// read high value data from db api
-export const loadHighValue = async () => {
-  const response = await fetch(
-    `https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/high_value`,
-  );
-  const data = await response.json();
-  return data.data;
-};
+// Read top products data from db api
+export const loadKvi = () => fetchData('kvi').then(data => data[0]);
 
-// read missing availiability data from db api
-export const loadMissingAvailiability = async () => {
-  const response = await fetch(
-    `https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/missing_availability`,
-  );
-  const data = await response.json();
-  return data.data;
-};
+// Read total sales data from db api
+export const loadWastePercentage = () => fetchData('waste_percentage').then(data => data[0]);
+
+// Read write-off data from db api
+export const loadWriteOff = () => fetchData('write_off');
+
+// Read high value data from db api
+export const loadHighValue = () => fetchData('high_value');
+
+// Read missing availability data from db api
+export const loadMissingAvailability = () => fetchData('missing_availability');

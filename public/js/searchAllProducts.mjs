@@ -198,7 +198,7 @@ export const missingAvailiabilityReport = () => {
     indexMjs.table.innerHTML = "";
     const theaderRow = ["Item No", "Description", "Stock"];
     indexMjs.createThead(theaderRow);
-    apiCallsMjs.loadMissingAvailiability().then((data) => {
+    apiCallsMjs.loadMissingAvailability().then((data) => {
         for (const item of data) {
             indexMjs.createRow([item.ItemNo, item.Description, item.stock]);
         }
