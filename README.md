@@ -2,6 +2,8 @@
 
 Created with ❤️ by [Tariq Baater](https://github.com/tariqbaater)
 
+Visit the website: [Dukan Inventory Management Application](https://retail-inventory-app.onrender.com/index.html)
+
 ## Preview of the web application dashboard
 
 https://github.com/tariqbaater/sqlitecloud/assets/23321048/e8ea6706-5d5e-4d72-a522-28bd3758866d
