@@ -38,6 +38,9 @@ npm install --save nodemon
 npm install @sqlitecloud/drivers
 ```
 
+### Database
+
+I set up my database using sqlitecloud Edge Functions that generate usable APIs.
 ### Build App and Run
 
 It is dependant on your package.json file configuration. see [example](https://github.com/tariqbaater/sqlitecloud/blob/main/package.json)
