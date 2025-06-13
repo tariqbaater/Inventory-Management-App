@@ -5,9 +5,17 @@ const BASE_URL = 'https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions';
 
 // Generic function to fetch data from the API
 const fetchData = async (endpoint, params = '') => {
-    const response = await fetch(`${BASE_URL}/${endpoint}${params}`);
-    const data = await response.json();
-    return data.data;
+    try {
+        const response = await fetch(`${BASE_URL}/${endpoint}${params}`);
+        if (!response.ok) {
+            throw new Error(`API request failed with status ${response.status}`);
+        }
+        const data = await response.json();
+        return data.data;
+    } catch (error) {
+        console.error(`Error fetching data from ${endpoint}:`, error);
+        throw error;
+    }
 };
 
 // Read history data from db api

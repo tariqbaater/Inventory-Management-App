@@ -9,64 +9,84 @@ export const itemHistoryTableData = () => {
     indexMjs.table.innerHTML = "";
     const theaderRow = ["Item No", "Description", "Qty", "Remarks"];
     indexMjs.createThead(theaderRow);
-    apiCallsMjs.historyData(indexMjs.searchHistBox.value).then((data) => {
-        for (const item of data) {
-            indexMjs.createRow([
-                item.ItemNo,
-                item.Description,
-                item.QtyPCs,
-                item.Remarks,
-            ]);
-        }
-    });
+    apiCallsMjs.historyData(indexMjs.searchHistBox.value)
+        .then((data) => {
+            for (const item of data) {
+                indexMjs.createRow([
+                    item.ItemNo,
+                    item.Description,
+                    item.QtyPCs,
+                    item.Remarks,
+                ]);
+            }
+        })
+        .catch(error => {
+            console.error("Error loading item history:", error);
+            alert("Error loading item history");
+        });
 };
 // function to be called when search/wh deliveries button is clicked
 export const whDeliveriesTableData = () => {
     indexMjs.table.innerHTML = "";
     const theaderRow = ["Item No", "Description", "Qty", "Date"];
     indexMjs.createThead(theaderRow);
-    apiCallsMjs.deliveryData(indexMjs.searchHistBox.value).then((data) => {
-        for (const item of data) {
-            indexMjs.createRow([
-                item.ItemNo,
-                item.Description,
-                item.QtyPCs,
-                item.Date.substring(0, 10),
-            ]);
-        }
-    });
+    apiCallsMjs.deliveryData(indexMjs.searchHistBox.value)
+        .then((data) => {
+            for (const item of data) {
+                indexMjs.createRow([
+                    item.ItemNo,
+                    item.Description,
+                    item.QtyPCs,
+                    item.Date.substring(0, 10),
+                ]);
+            }
+        })
+        .catch(error => {
+            console.error("Error loading warehouse deliveries:", error);
+            alert("Error loading warehouse deliveries");
+        });
 };
 // function to be called when search/wh deliveries button is clicked
 export const dsdDeliveriesTableData = () => {
     indexMjs.table.innerHTML = "";
     const theaderRow = ["Item No", "Description", "Qty", "Date"];
     indexMjs.createThead(theaderRow);
-    apiCallsMjs.dsdDelivery(indexMjs.searchHistBox.value).then((data) => {
-        for (const item of data) {
-            indexMjs.createRow([
-                item.ItemNo,
-                item.Description,
-                item.Qty,
-                item.Date.substring(0, 10),
-            ]);
-        }
-    });
+    apiCallsMjs.dsdDelivery(indexMjs.searchHistBox.value)
+        .then((data) => {
+            for (const item of data) {
+                indexMjs.createRow([
+                    item.ItemNo,
+                    item.Description,
+                    item.Qty,
+                    item.Date.substring(0, 10),
+                ]);
+            }
+        })
+        .catch(error => {
+            console.error("Error loading DSD deliveries:", error);
+            alert("Error loading DSD deliveries");
+        });
 };
 // function to be called when search/sales history button is clicked
 export const salesHistoryTableData = () => {
     indexMjs.table.innerHTML = "";
     const theaderRow = ["Item No", "Description", "Qty", "Date"];
     indexMjs.createThead(theaderRow);
-    apiCallsMjs.salesHistory(indexMjs.searchHistBox.value).then((data) => {
-        for (const item of data) {
-            indexMjs.createRow([
-                item.ItemNo,
-                item.Description,
-                item.Qty,
-                item.Date.substring(0, 10),
-            ]);
-        }
-    });
+    apiCallsMjs.salesHistory(indexMjs.searchHistBox.value)
+        .then((data) => {
+            for (const item of data) {
+                indexMjs.createRow([
+                    item.ItemNo,
+                    item.Description,
+                    item.Qty,
+                    item.Date.substring(0, 10),
+                ]);
+            }
+        })
+        .catch(error => {
+            console.error("Error loading sales history:", error);
+            alert("Error loading sales history");
+        });
 };
 // function to be called when all products button is clicked
 export const searchAllProducts = () => {
@@ -75,11 +95,16 @@ export const searchAllProducts = () => {
     indexMjs.table.innerHTML = "";
     const theaderRow = ["Item No", "Description", "Barcode"];
     indexMjs.createThead(theaderRow);
-    apiCallsMjs.loadData(indexMjs.searchName.value).then((data) => {
-        for (const item of data) {
-            indexMjs.createRow([item.ItemNo, item.Description, item.Barcode]);
-        }
-    });
+    apiCallsMjs.loadData(indexMjs.searchName.value)
+        .then((data) => {
+            for (const item of data) {
+                indexMjs.createRow([item.ItemNo, item.Description, item.Barcode]);
+            }
+        })
+        .catch(error => {
+            console.error("Error loading all products:", error);
+            alert("Error loading all products");
+        });
 };
 
 // function to be called when dashboard button is clicked
@@ -91,39 +116,45 @@ export const dashBoard = () => {
     indexMjs.vsbudgetDiv.innerHTML = "";
     indexMjs.salesBudgetDiv.innerHTML = "";
     indexMjs.inventoryDayDiv.innerHTML = "";
-    apiCallsMjs.loadWastePercentage().then((data) => {
-        const totalSalesdata = data.totalsales.toLocaleString();
-        const averageSales = data.Avg_Sales.toLocaleString();
-        const vsBudget = data.vsbudget + "%";
-        const percentage = data.percentage + "%";
-        const salesBudget = data.totalsalesbudget.toLocaleString();
+    apiCallsMjs.loadWastePercentage()
+        .then((data) => {
+            const totalSalesdata = data.totalsales.toLocaleString();
+            const averageSales = data.Avg_Sales.toLocaleString();
+            const vsBudget = data.vsbudget + "%";
+            const percentage = data.percentage + "%";
+            const salesBudget = data.totalsalesbudget.toLocaleString();
 
-        // const inventory = data.DaysSince;
-        const span = document.createElement("span");
-        const span2 = document.createElement("span");
-        const span3 = document.createElement("span");
-        const span4 = document.createElement("span");
-        const span5 = document.createElement("span");
-        // const span6 = document.createElement("span");
-        span.innerHTML = totalSalesdata;
-        indexMjs.salesDiv.appendChild(span);
-        span2.innerHTML = averageSales;
-        indexMjs.wastageDiv.appendChild(span2);
-        span3.innerHTML = percentage;
-        indexMjs.percentageDiv.appendChild(span3);
-        span4.innerHTML = vsBudget;
-        indexMjs.vsbudgetDiv.appendChild(span4);
-        span5.innerHTML = salesBudget;
-        indexMjs.salesBudgetDiv.appendChild(span5);
-        // span6.innerHTML = inventory;
-        // indexMjs.inventoryDayDiv.appendChild(span6);
-    });
-    apiCallsMjs.loadKvi().then((data) => {
-        const kvi = data.kvi_percentage + "%";
-        const span = document.createElement("span");
-        span.innerHTML = kvi;
-        indexMjs.inventoryDayDiv.appendChild(span);
-    });
+            const span = document.createElement("span");
+            const span2 = document.createElement("span");
+            const span3 = document.createElement("span");
+            const span4 = document.createElement("span");
+            const span5 = document.createElement("span");
+            span.innerHTML = totalSalesdata;
+            indexMjs.salesDiv.appendChild(span);
+            span2.innerHTML = averageSales;
+            indexMjs.wastageDiv.appendChild(span2);
+            span3.innerHTML = percentage;
+            indexMjs.percentageDiv.appendChild(span3);
+            span4.innerHTML = vsBudget;
+            indexMjs.vsbudgetDiv.appendChild(span4);
+            span5.innerHTML = salesBudget;
+            indexMjs.salesBudgetDiv.appendChild(span5);
+        })
+        .catch(error => {
+            console.error("Error loading waste percentage:", error);
+            alert("Error loading waste percentage");
+        });
+    apiCallsMjs.loadKvi()
+        .then((data) => {
+            const kvi = data.kvi_percentage + "%";
+            const span = document.createElement("span");
+            span.innerHTML = kvi;
+            indexMjs.inventoryDayDiv.appendChild(span);
+        })
+        .catch(error => {
+            console.error("Error loading KVI:", error);
+            alert("Error loading KVI");
+        });
 };
 
 // function to be called when write off button is clicked
@@ -142,16 +173,21 @@ export const writeOff = () => {
     indexMjs.table.innerHTML = "";
     const theaderRow = ["Item No", "Description", "Qty", "Totals"];
     indexMjs.createThead(theaderRow);
-    apiCallsMjs.loadWriteOff().then((data) => {
-        for (const item of data) {
-            indexMjs.createRow([
-                item.ItemNo,
-                item.Description,
-                item.QtyPCs,
-                item.TotalPrice,
-            ]);
-        }
-    });
+    apiCallsMjs.loadWriteOff()
+        .then((data) => {
+            for (const item of data) {
+                indexMjs.createRow([
+                    item.ItemNo,
+                    item.Description,
+                    item.QtyPCs,
+                    item.TotalPrice,
+                ]);
+            }
+        })
+        .catch(error => {
+            console.error("Error loading write-off data:", error);
+            alert("Error loading write-off data");
+        });
 };
 // function to be called when high value button is clicked
 export const highValueReport = () => {
@@ -170,16 +206,21 @@ export const highValueReport = () => {
     indexMjs.table.innerHTML = "";
     const theaderRow = ["Item No", "Description", "Qty", "Value"];
     indexMjs.createThead(theaderRow);
-    apiCallsMjs.loadHighValue().then((data) => {
-        for (const item of data) {
-            indexMjs.createRow([
-                item.ItemNo,
-                item.Description,
-                item.Qty,
-                item.value,
-            ]);
-        }
-    });
+    apiCallsMjs.loadHighValue()
+        .then((data) => {
+            for (const item of data) {
+                indexMjs.createRow([
+                    item.ItemNo,
+                    item.Description,
+                    item.Qty,
+                    item.value,
+                ]);
+            }
+        })
+        .catch(error => {
+            console.error("Error loading high-value data:", error);
+            alert("Error loading high-value data");
+        });
 };
 
 // function to be called when missing availability button is clicked
@@ -198,9 +239,14 @@ export const missingAvailiabilityReport = () => {
     indexMjs.table.innerHTML = "";
     const theaderRow = ["Item No", "Description", "Stock"];
     indexMjs.createThead(theaderRow);
-    apiCallsMjs.loadMissingAvailability().then((data) => {
-        for (const item of data) {
-            indexMjs.createRow([item.ItemNo, item.Description, item.stock]);
-        }
-    });
+    apiCallsMjs.loadMissingAvailability()
+        .then((data) => {
+            for (const item of data) {
+                indexMjs.createRow([item.ItemNo, item.Description, item.stock]);
+            }
+        })
+        .catch(error => {
+            console.error("Error loading missing availability data:", error);
+            alert("Error loading missing availability data");
+        });
 };
