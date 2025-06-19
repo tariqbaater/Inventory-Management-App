@@ -4,22 +4,47 @@
 const BASE_URL = 'https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions';
 
 // Show/hide the loading indicator during API calls
+let loaderRequestCount = 0;
 const showLoader = () => {
+  loaderRequestCount++;
   const loader = document.getElementById('loading-indicator');
-  if (loader) loader.style.display = 'flex';
+  if (loader && loaderRequestCount > 0) loader.style.display = 'flex';
 };
 const hideLoader = () => {
+  loaderRequestCount = Math.max(loaderRequestCount - 1, 0);
   const loader = document.getElementById('loading-indicator');
-  if (loader) loader.style.display = 'none';
+  if (loader && loaderRequestCount === 0) loader.style.display = 'none';
 };
 
 // Generic function to fetch data from the API
+const showError = (msg) => {
+  const errDiv = document.getElementById('api-error-message');
+  if (errDiv) {
+    errDiv.textContent = msg;
+    errDiv.style.display = 'block';
+    setTimeout(() => {
+      errDiv.style.display = 'none';
+    }, 4000);
+  }
+};
+
 const fetchData = async (endpoint, params = '') => {
   showLoader();
   try {
     const response = await fetch(`${BASE_URL}/${endpoint}${params}`);
+    if (!response.ok) {
+      showError(`API Error: ${response.status} ${response.statusText}`);
+      throw new Error(`API Error: ${response.status} ${response.statusText}`);
+    }
     const data = await response.json();
+    if (!data || (!data.data && data.error)) {
+      showError(data.error ? `API error: ${data.error}` : 'API error: invalid data');
+      throw new Error(data.error ? data.error : 'Invalid API response');
+    }
     return data.data;
+  } catch (err) {
+    showError(err.message || 'Unknown error');
+    throw err;
   } finally {
     hideLoader();
   }

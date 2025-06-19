@@ -24,28 +24,45 @@ Fork the repo and follow the below instructions to build and run the application
 
 ## Getting Started
 
+### Prerequisites
+Ensure you have the following installed:
+- Node.js >= 14
+- npm >= 6
+
 ### Install Dependencies
+Run the following command to install the required dependencies:
 
 ```bash
-npm install --save mysql2
-npm install --save json2csv
-npm install --save express
-npm install --save cors
-npm install --save dotenv
-npm install --save fs-extra
-npm install --save path
-npm install --save nodemon
-npm install @sqlitecloud/drivers
+npm install
 ```
+
+### Database
+Dukan Inventory Management Application uses SQLiteCloud Edge Functions to generate usable APIs for the database backend. Refer to the documentation for setting up an SQLite database [here](https://sqlitecloud.com/docs).
+
+### Build App and Run
+To build and run the application, execute:
+
+```bash
+npm start
+```
+This will launch the application on `http://localhost:8080` or the specified PORT in `.env`.
 
 ### Database
 
 I set up my database using sqlitecloud Edge Functions that generate usable APIs.
 ### Build App and Run
 
-It is dependant on your package.json file configuration. see [example](https://github.com/tariqbaater/sqlitecloud/blob/main/package.json)
+To build and run the application, execute:
 
 ```bash
-npm install
 npm start
 ```
+This will launch the application on `http://localhost:8080` or the specified PORT in `.env`.
+
+### Contributing
+Contributions are welcome! To contribute:
+1. Fork the repository.
+2. Create a new feature branch: `git checkout -b feature-branch-name`.
+3. Commit your changes: `git commit -m 'Add some feature'`.
+4. Push to the branch: `git push origin feature-branch-name`.
+5. Open a Pull Request.
