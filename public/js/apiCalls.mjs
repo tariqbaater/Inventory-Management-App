@@ -3,11 +3,26 @@
 // Base URL for the API
 const BASE_URL = 'https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions';
 
+// Show/hide the loading indicator during API calls
+const showLoader = () => {
+  const loader = document.getElementById('loading-indicator');
+  if (loader) loader.style.display = 'flex';
+};
+const hideLoader = () => {
+  const loader = document.getElementById('loading-indicator');
+  if (loader) loader.style.display = 'none';
+};
+
 // Generic function to fetch data from the API
 const fetchData = async (endpoint, params = '') => {
-  const response = await fetch(`${BASE_URL}/${endpoint}${params}`);
-  const data = await response.json();
-  return data.data;
+  showLoader();
+  try {
+    const response = await fetch(`${BASE_URL}/${endpoint}${params}`);
+    const data = await response.json();
+    return data.data;
+  } finally {
+    hideLoader();
+  }
 };
 
 // Read history data from db api

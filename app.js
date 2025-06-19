@@ -3,6 +3,8 @@ import express from "express";
 import path from "path";
 import cors from "cors";
 import { Parser } from "json2csv";
+// Ensure fetch is available in all Node.js versions
+import fetch from 'node-fetch';
 
 // initialize express
 const app = express();
@@ -14,7 +16,7 @@ const corsOptions = {
   optionsSuccessStatus: 200,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   preflightContinue: false,
-  credentials: true,
+  // credentials: true, // Cannot use credentials with origin: "*"
   allowedHeaders: ["Content-Type", "Authorization"],
 };
 
@@ -34,77 +36,53 @@ app.get("", (_req, res) => {
 // parse json
 app.use(express.json());
 
+// Helper function to serve CSV export routes
+async function serveCsvExport(res, endpointUrl, filename) {
+  try {
+    const response = await fetch(endpointUrl);
+    const json = await response.json();
+    const data = json.data;
+    const parser = new Parser();
+    const csv = parser.parse(data);
+    res.setHeader("Content-Type", "text/csv");
+    res.setHeader("Content-Disposition", `attachment; filename=${filename}`);
+    res.send(csv);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("<h1>Error generating CSV file</h1>");
+  }
+}
+
 // export csv file using json2csv
 app.get("/high_value_csv", async (_req, res) => {
-  const loadHighValue = async () => {
-    const response = await fetch(
-      `https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/high_value`,
-    );
-    const data = await response.json();
-    return data.data;
-  };
-
-  loadHighValue().then((data) => {
-    const parser = new Parser();
-    const csv = parser.parse(data);
-    res.setHeader("Content-Type", "text/csv");
-    res.setHeader("Content-Disposition", "attachment; filename=high_value.csv");
-    res.send(csv);
-  });
+  await serveCsvExport(
+    res,
+    "https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/high_value",
+    "high_value.csv"
+  );
 });
 
-//export csv file using json2csv
 app.get("/writeoff_csv", async (_req, res) => {
-  const loadWriteOff = async () => {
-    const response = await fetch(
-      `https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/write_off`,
-    );
-    const data = await response.json();
-    return data.data;
-  };
-
-  loadWriteOff().then((data) => {
-    const parser = new Parser();
-    const csv = parser.parse(data);
-    res.setHeader("Content-Type", "text/csv");
-    res.setHeader("Content-Disposition", "attachment; filename=writeoff.csv");
-    res.send(csv);
-  });
+  await serveCsvExport(
+    res,
+    "https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/write_off",
+    "writeoff.csv"
+  );
 });
 
-// get missing availability report
 app.get("/missing_availability_csv/", async (_req, res) => {
-  const loadMissingAvailiability = async () => {
-    const response = await fetch(
-      `https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/missing_availability`,
-    );
-    const data = await response.json();
-    return data.data;
-  };
-
-  loadMissingAvailiability().then((data) => {
-    const parser = new Parser();
-    const csv = parser.parse(data);
-    res.setHeader("Content-Type", "text/csv");
-    res.setHeader(
-      "Content-Disposition",
-      "attachment; filename=missing_availability.csv",
-    );
-    res.send(csv);
-  });
+  await serveCsvExport(
+    res,
+    "https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions/missing_availability",
+    "missing_availability.csv"
+  );
 });
-// catch errors
-app.use((err, res) => {
+// Consolidated Express error handler middleware
+app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send("<h1>Error 500: Internal server error</h1>");
 });
-
-app.use((err, res) => {
-  console.log(err.stack);
+// 404 handler (after all routes)
+app.use((req, res, next) => {
   res.status(404).send("<h1>Error 404: Page not found</h1>");
-});
-
-app.use((err, res) => {
-  console.log(err.stack);
-  res.status(405).send("<h1>Error 405: Method not allowed</h1>");
 });
