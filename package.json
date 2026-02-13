@@ -25,6 +25,7 @@
     "express-validator": "^7.2.1",
     "fs": "^0.0.1-security",
     "fs-extra": "^11.2.0",
+    "helmet": "^8.1.0",
     "json2csv": "^6.0.0-alpha.2",
     "mongodb": "^6.3.0",
     "mysql2": "^3.9.1",
