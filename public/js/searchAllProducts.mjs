@@ -55,7 +55,7 @@ export const dsdDeliveriesTableData = () => {
 // function to be called when search/sales history button is clicked
 export const salesHistoryTableData = () => {
   indexMjs.table.innerHTML = "";
-  const theaderRow = ["Item No", "Description", "Qty", "Amount"];
+  const theaderRow = ["Item No", "Description", "Qty", "Date"];
   indexMjs.createThead(theaderRow);
   apiCallsMjs.salesHistory(indexMjs.searchHistBox.value).then((data) => {
     for (const item of data) {
@@ -63,7 +63,7 @@ export const salesHistoryTableData = () => {
         item.ItemNo,
         item.Description,
         item.Qty,
-        item.Amount,
+        item.Date ? item.Date.substring(0, 10) : '',
       ]);
     }
   });

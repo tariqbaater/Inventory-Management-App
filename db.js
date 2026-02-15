@@ -72,7 +72,7 @@ export async function dsdDelivery(item) {
 
 export async function salesHistory(item) {
   const [rows] = await pool.query(
-    `SELECT s.ItemNo, d.Description, s.Qty, s.Amount FROM sales s JOIN data d ON s.ItemNo = d.ItemNo WHERE s.ItemNo = ?;`,
+    `SELECT ItemNo, Description, Qty, Date FROM daily_sales WHERE ItemNo = ?;`,
     [item]
   );
   return rows;
@@ -87,7 +87,7 @@ export async function searchTable() {
 
 export async function writeOff() {
   const [rows] = await pool.query(
-    "SELECT ItemNo, Description, Qty AS QtyPCs, `Total Price` AS TotalPrice FROM write_off"
+    "SELECT ItemNo, Description, SUM(Qty) AS QtyPCs, SUM(`Total Price`) AS TotalPrice FROM write_off GROUP BY ItemNo, Description"
   );
   return rows;
 }
