@@ -99,6 +99,14 @@ export async function highValue() {
   return rows;
 }
 
+export async function findUserByUsername(username) {
+  const [rows] = await pool.query(
+    'SELECT id, username, password_hash FROM users WHERE username = ?',
+    [username]
+  );
+  return rows[0] || null;
+}
+
 export async function missingAvailability() {
   const [rows] = await pool.query(
     "SELECT `ac`.ItemNo, `ac`.Description, `ms`.Qty AS stock FROM `active_list` ac JOIN `main_sheet` ms ON `ac`.`ItemNo` = `ms`.`ItemNo` JOIN `pack_size` dd ON `ac`.`ItemNo` = `dd`.`ItemNo` WHERE `ac`.`Mode` = 'DC' AND ac.ItemClass IN ('P-A', 'P-B', 'S', 'G-A') AND ms.Qty < dd.QtyPCs/`dd`.QtyVPE AND ac.ItemCategory NOT IN ('Smoking Needs', 'Frozen Foods') GROUP BY ac.ItemNo, ac.Description, ac.Mode, ac.ItemCategory, ac.Status, ac.ItemClass, dd.QtyPCs/`dd`.QtyVPE, ms.Qty"

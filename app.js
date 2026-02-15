@@ -4,21 +4,22 @@ import path from "path";
 import cors from "cors";
 import dotenv from 'dotenv';
 import helmet from 'helmet';
+import session from 'express-session';
 import winston from 'winston';
 
 dotenv.config();
 
 // initialize express
 const app = express();
-// set port
 const __dirname = path.resolve();
-// set cors
+
+// CORS — tighten from origin: "*" to support credentials
 const corsOptions = {
-  origin: "*",
+  origin: process.env.CORS_ORIGIN || true,
   optionsSuccessStatus: 200,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   preflightContinue: false,
-  // credentials: true, // Cannot use credentials with origin: "*"
+  credentials: true,
   allowedHeaders: ["Content-Type", "Authorization"],
 };
 
@@ -52,7 +53,27 @@ app.use(
     permittedCrossDomainPolicies: { policy: "none" },
     xssFilter: true,
   })
-); // Add helmet middleware for security
+);
+
+// Trust proxy for secure cookies behind Dokploy reverse proxy
+app.set('trust proxy', 1);
+
+// Session middleware
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'change-me-in-production',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+    maxAge: 8 * 60 * 60 * 1000, // 8 hours
+  },
+}));
+
+// Parse request bodies
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 const logger = winston.createLogger({
   level: 'info',
@@ -78,8 +99,6 @@ app.use(express.static(path.join(__dirname, "views")));
 app.get("", (_req, res) => {
   res.sendFile(path.join(__dirname, "views/index.html"));
 });
-// parse json
-app.use(express.json());
 
 // Modularized API routes
 import apiRoutes from './routes/api.js';

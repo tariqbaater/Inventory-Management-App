@@ -1,6 +1,8 @@
 import express from 'express';
+import bcrypt from 'bcrypt';
 import { Parser } from 'json2csv';
-import { query, validationResult } from 'express-validator';
+import { body, query, validationResult } from 'express-validator';
+import { requireAuth } from '../middleware/auth.js';
 import {
   kvi,
   wastePercentage,
@@ -12,9 +14,54 @@ import {
   writeOff,
   highValue,
   missingAvailability,
+  findUserByUsername,
 } from '../db.js';
 
 const router = express.Router();
+
+// --- Auth routes (no session required) ---
+
+router.post(
+  '/login',
+  [
+    body('username').isString().trim().notEmpty(),
+    body('password').isString().notEmpty(),
+  ],
+  async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) return res.status(400).json({ error: 'Invalid credentials' });
+
+    try {
+      const user = await findUserByUsername(req.body.username);
+      if (!user || !(await bcrypt.compare(req.body.password, user.password_hash))) {
+        return res.status(401).json({ error: 'Invalid credentials' });
+      }
+
+      // Prevent session fixation
+      req.session.regenerate((err) => {
+        if (err) return next(err);
+        req.session.userId = user.id;
+        req.session.save((err) => {
+          if (err) return next(err);
+          res.json({ message: 'Login successful' });
+        });
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+router.post('/logout', (req, res, next) => {
+  req.session.destroy((err) => {
+    if (err) return next(err);
+    res.clearCookie('connect.sid');
+    res.json({ message: 'Logged out' });
+  });
+});
+
+// --- All routes below require authentication ---
+router.use(requireAuth);
 
 // Data endpoints
 router.get("/kvi", async (req, res, next) => {

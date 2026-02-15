@@ -1,5 +1,6 @@
 // *********** IMPORTS ***********
 import * as searchAllProductsMjs from "./searchAllProducts.mjs";
+import { login, logout } from "./apiCalls.mjs";
 
 // *********** VARIABLES ***********
 const docTitle = document.title;
@@ -70,8 +71,9 @@ export const createRow = (rowData) => {
     tbody.appendChild(tr);
 };
 
-//*********** EVENT LISTENERS *************
-window.onload = () => {
+// Helper to show the login modal and hide app content
+function showLoginModal() {
+    modal.style.display = "block";
     navbar.style.display = "none";
     dashboard.style.display = "none";
     printBtnDiv.style.display = "none";
@@ -79,40 +81,59 @@ window.onload = () => {
     searchDiv2.style.display = "none";
     searchHistory.style.display = "none";
     table.innerHTML = "";
-    // check if user is logged in
-    if (localStorage.getItem("loggedIn") === "true") {
+}
+
+// Helper to show the app after successful auth
+function showApp() {
+    modal.style.display = "none";
+    navbar.style.display = "block";
+    searchAllProductsMjs.dashBoard();
+}
+
+//*********** EVENT LISTENERS *************
+
+// Listen for 401 responses — show login modal
+window.addEventListener('auth:required', () => {
+    showLoginModal();
+});
+
+window.onload = () => {
+    // Hide everything initially
+    navbar.style.display = "none";
+    dashboard.style.display = "none";
+    printBtnDiv.style.display = "none";
+    searchDiv3.style.display = "none";
+    searchDiv2.style.display = "none";
+    searchHistory.style.display = "none";
+    table.innerHTML = "";
+    modal.style.display = "none";
+
+    // Try loading dashboard — if session is valid it works,
+    // if not the 401 handler will show the login modal
+    searchAllProductsMjs.dashBoard().then(() => {
         navbar.style.display = "block";
-        modal.style.display = "none";
-        printBtnDiv.style.display = "none";
-        searchDiv3.style.display = "none";
-        searchDiv2.style.display = "none";
-        searchHistory.style.display = "none";
-        table.innerHTML = "";
-        searchAllProductsMjs.dashBoard();
-    } else {
-        modal.style.display = "block";
-    }
+    }).catch(() => {
+        // 401 handler already shows modal
+    });
 };
 
 // listen for login button
-loginBtn.addEventListener("click", () => {
-    // check if credentials are correct then set local storage to true
-    if (
-        document.querySelector("#username").value === "admin" &&
-        document.querySelector("#password").value === "admin"
-    ) {
-        localStorage.setItem("loggedIn", true);
-        window.location.reload();
-        modal.style.display = "none";
-    } else {
-        alert("Invalid credentials");
+loginBtn.addEventListener("click", async (e) => {
+    e.preventDefault();
+    const username = document.querySelector("#username").value;
+    const password = document.querySelector("#password").value;
+    try {
+        await login(username, password);
+        showApp();
+    } catch (err) {
+        alert(err.message || "Invalid credentials");
     }
 });
 
 // listen for logout button
-logOutBtn.addEventListener("click", () => {
-    localStorage.setItem("loggedIn", false);
-    window.location.reload();
+logOutBtn.addEventListener("click", async () => {
+    await logout();
+    showLoginModal();
 });
 
 // listen for the all products button to load all products

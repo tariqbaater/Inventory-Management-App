@@ -31,7 +31,13 @@ const showError = (msg) => {
 const fetchData = async (endpoint, params = '') => {
   showLoader();
   try {
-    const response = await fetch(`${BASE_URL}/${endpoint}${params}`);
+    const response = await fetch(`${BASE_URL}/${endpoint}${params}`, {
+      credentials: 'include',
+    });
+    if (response.status === 401) {
+      window.dispatchEvent(new CustomEvent('auth:required'));
+      throw new Error('Authentication required');
+    }
     if (!response.ok) {
       showError(`API Error: ${response.status} ${response.statusText}`);
       throw new Error(`API Error: ${response.status} ${response.statusText}`);
@@ -43,11 +49,35 @@ const fetchData = async (endpoint, params = '') => {
     }
     return data.data;
   } catch (err) {
-    showError(err.message || 'Unknown error');
+    if (err.message !== 'Authentication required') {
+      showError(err.message || 'Unknown error');
+    }
     throw err;
   } finally {
     hideLoader();
   }
+};
+
+// Auth functions
+export const login = async (username, password) => {
+  const response = await fetch(`${BASE_URL}/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({ username, password }),
+  });
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({}));
+    throw new Error(data.error || 'Login failed');
+  }
+  return response.json();
+};
+
+export const logout = async () => {
+  await fetch(`${BASE_URL}/logout`, {
+    method: 'POST',
+    credentials: 'include',
+  });
 };
 
 // Read history data from db api

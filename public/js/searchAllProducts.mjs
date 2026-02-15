@@ -91,7 +91,7 @@ export const dashBoard = () => {
   indexMjs.vsbudgetDiv.innerHTML = "";
   indexMjs.salesBudgetDiv.innerHTML = "";
   indexMjs.inventoryDayDiv.innerHTML = "";
-  apiCallsMjs.loadWastePercentage().then((data) => {
+  const wastePromise = apiCallsMjs.loadWastePercentage().then((data) => {
     const totalSalesdata = data.totalsales.toLocaleString();
     const averageSales = data.Avg_Sales.toLocaleString();
     const vsBudget = data.vsbudget + "%";
@@ -118,12 +118,13 @@ export const dashBoard = () => {
     // span6.innerHTML = inventory;
     // indexMjs.inventoryDayDiv.appendChild(span6);
   });
-  apiCallsMjs.loadKvi().then((data) => {
+  const kviPromise = apiCallsMjs.loadKvi().then((data) => {
     const kvi = data.kvi_percentage + "%";
     const span = document.createElement("span");
     span.innerHTML = kvi;
     indexMjs.inventoryDayDiv.appendChild(span);
   });
+  return Promise.all([wastePromise, kviPromise]);
 };
 
 // function to be called when write off button is clicked
