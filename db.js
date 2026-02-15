@@ -17,8 +17,8 @@ export async function kvi() {
     WITH availability AS (
       SELECT count(k.ItemNo) as available
       FROM main_sheet ms
-      JOIN kvi k ON ms.Item_No = k.ItemNo
-      WHERE CAST(ms.Phy_Qty AS SIGNED) > 0
+      JOIN kvi k ON ms.ItemNo = k.ItemNo
+      WHERE ms.Qty > 0
     ),
     kvi_count AS (
       SELECT count(k.ItemNo) as kvi_count FROM kvi k
@@ -94,14 +94,14 @@ export async function writeOff() {
 
 export async function highValue() {
   const [rows] = await pool.query(
-    `SELECT ms.Item_No AS ItemNo, ms.Item_Description AS Description, CAST(ms.Phy_Qty AS SIGNED) AS Qty, ROUND((s.AmountVAT / s.Qty) * CAST(ms.Phy_Qty AS SIGNED), 2) as value FROM main_sheet ms JOIN sales s ON ms.Item_No = s.ItemNo WHERE CAST(ms.Phy_Qty AS SIGNED) > 0 AND ROUND((s.AmountVAT / s.Qty) * CAST(ms.Phy_Qty AS SIGNED), 2) > 500 ORDER BY value DESC`
+    `SELECT ms.ItemNo, ms.Description, ms.Qty, ROUND((s.AmountVAT / s.Qty) * ms.Qty, 2) as value FROM main_sheet ms JOIN sales s ON ms.ItemNo = s.ItemNo WHERE ms.Qty > 0 AND ROUND((s.AmountVAT / s.Qty) * ms.Qty, 2) > 500 ORDER BY value DESC`
   );
   return rows;
 }
 
 export async function missingAvailability() {
   const [rows] = await pool.query(
-    "SELECT `ac`.ItemNo, `ac`.Description, CAST(`ms`.Phy_Qty AS SIGNED) AS stock FROM `active_list` ac JOIN `main_sheet` ms ON `ac`.`ItemNo` = `ms`.`Item_No` JOIN `pack_size` dd ON `ac`.`ItemNo` = `dd`.`ItemNo` WHERE `ac`.`Mode` = 'DC' AND ac.ItemClass IN ('P-A', 'P-B', 'S', 'G-A') AND CAST(ms.Phy_Qty AS SIGNED) < dd.QtyPCs/`dd`.QtyVPE AND ac.ItemCategory NOT IN ('Smoking Needs', 'Frozen Foods') GROUP BY ac.ItemNo, ac.Description, ac.Mode, ac.ItemCategory, ac.Status, ac.ItemClass, dd.QtyPCs/`dd`.QtyVPE, ms.Phy_Qty"
+    "SELECT `ac`.ItemNo, `ac`.Description, `ms`.Qty AS stock FROM `active_list` ac JOIN `main_sheet` ms ON `ac`.`ItemNo` = `ms`.`ItemNo` JOIN `pack_size` dd ON `ac`.`ItemNo` = `dd`.`ItemNo` WHERE `ac`.`Mode` = 'DC' AND ac.ItemClass IN ('P-A', 'P-B', 'S', 'G-A') AND ms.Qty < dd.QtyPCs/`dd`.QtyVPE AND ac.ItemCategory NOT IN ('Smoking Needs', 'Frozen Foods') GROUP BY ac.ItemNo, ac.Description, ac.Mode, ac.ItemCategory, ac.Status, ac.ItemClass, dd.QtyPCs/`dd`.QtyVPE, ms.Qty"
   );
   return rows;
 }
