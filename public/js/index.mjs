@@ -52,27 +52,36 @@ export const createThead = (data) => {
     }
 };
 
-// function for creating rows with data
-export const createRow = (rowData) => {
-    // Check if tbody already exists, if not, create one
-    let tbody = document.querySelector("tbody");
-    if (!tbody) {
-        tbody = document.createElement("tbody");
-        table.appendChild(tbody);
-    }
-
+// function for creating a single row element (does not append to DOM)
+const buildRow = (rowData) => {
     const tr = document.createElement("tr");
     tr.className = "table-row";
-
     for (const item of rowData) {
         const td = document.createElement("td");
         td.textContent = item;
         td.className = "table-data";
         tr.appendChild(td);
     }
+    return tr;
+};
 
-    // Append the row to the tbody
-    tbody.appendChild(tr);
+// batch-create rows using DocumentFragment (single DOM reflow)
+export const createRows = (allRowData) => {
+    let tbody = table.querySelector("tbody");
+    if (!tbody) {
+        tbody = document.createElement("tbody");
+        table.appendChild(tbody);
+    }
+    const fragment = document.createDocumentFragment();
+    for (const rowData of allRowData) {
+        fragment.appendChild(buildRow(rowData));
+    }
+    tbody.appendChild(fragment);
+};
+
+// single-row helper (kept for backwards compatibility)
+export const createRow = (rowData) => {
+    createRows([rowData]);
 };
 
 // Fetch and display current user info in navbar
@@ -263,24 +272,24 @@ highValueBtn.addEventListener("click", () => {
     searchAllProductsMjs.highValueReport();
 });
 
-// listen for the search-live input
+// listen for the search-live input (debounced 300ms)
+let searchTimeout;
 searchLiveBox.addEventListener("input", (event) => {
-    const value = event.target.value;
-    const filteredRows = table.querySelectorAll("tbody tr");
-    filteredRows.forEach((row) => {
-        const cells = row.querySelectorAll("td");
-        let found = false;
-        cells.forEach((cell) => {
-            if (cell.textContent.toLowerCase().includes(value.toLowerCase())) {
-                found = true;
-            }
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+        const value = event.target.value.toLowerCase();
+        const filteredRows = table.querySelectorAll("tbody tr");
+        filteredRows.forEach((row) => {
+            const cells = row.querySelectorAll("td");
+            let found = false;
+            cells.forEach((cell) => {
+                if (cell.textContent.toLowerCase().includes(value)) {
+                    found = true;
+                }
+            });
+            row.style.display = found ? "" : "none";
         });
-        if (found) {
-            row.style.display = "";
-        } else {
-            row.style.display = "none";
-        }
-    });
+    }, 300);
 });
 
 // listen for missing availability button

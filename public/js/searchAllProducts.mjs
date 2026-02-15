@@ -10,14 +10,12 @@ export const itemHistoryTableData = () => {
   const theaderRow = ["Item No", "Description", "Qty", "Date"];
   indexMjs.createThead(theaderRow);
   apiCallsMjs.historyData(indexMjs.searchHistBox.value).then((data) => {
-    for (const item of data) {
-      indexMjs.createRow([
-        item.ItemNo,
-        item.Description,
-        item.QtyPCs,
-        item.Date ? item.Date.substring(0, 10) : '',
-      ]);
-    }
+    indexMjs.createRows(data.map(item => [
+      item.ItemNo,
+      item.Description,
+      item.QtyPCs,
+      item.Date ? item.Date.substring(0, 10) : '',
+    ]));
   });
 };
 // function to be called when search/wh deliveries button is clicked
@@ -26,14 +24,12 @@ export const whDeliveriesTableData = () => {
   const theaderRow = ["Item No", "Description", "Qty", "Date"];
   indexMjs.createThead(theaderRow);
   apiCallsMjs.deliveryData(indexMjs.searchHistBox.value).then((data) => {
-    for (const item of data) {
-      indexMjs.createRow([
-        item.ItemNo,
-        item.Description,
-        item.QtyPCs,
-        item.Date.substring(0, 10),
-      ]);
-    }
+    indexMjs.createRows(data.map(item => [
+      item.ItemNo,
+      item.Description,
+      item.QtyPCs,
+      item.Date.substring(0, 10),
+    ]));
   });
 };
 // function to be called when search/wh deliveries button is clicked
@@ -42,14 +38,12 @@ export const dsdDeliveriesTableData = () => {
   const theaderRow = ["Item No", "Description", "Qty", "Date"];
   indexMjs.createThead(theaderRow);
   apiCallsMjs.dsdDelivery(indexMjs.searchHistBox.value).then((data) => {
-    for (const item of data) {
-      indexMjs.createRow([
-        item.ItemNo,
-        item.Description,
-        item.Qty,
-        item.Date.substring(0, 10),
-      ]);
-    }
+    indexMjs.createRows(data.map(item => [
+      item.ItemNo,
+      item.Description,
+      item.Qty,
+      item.Date.substring(0, 10),
+    ]));
   });
 };
 // function to be called when search/sales history button is clicked
@@ -58,14 +52,12 @@ export const salesHistoryTableData = () => {
   const theaderRow = ["Item No", "Description", "Qty", "Date"];
   indexMjs.createThead(theaderRow);
   apiCallsMjs.salesHistory(indexMjs.searchHistBox.value).then((data) => {
-    for (const item of data) {
-      indexMjs.createRow([
-        item.ItemNo,
-        item.Description,
-        item.Qty,
-        item.Date ? item.Date.substring(0, 10) : '',
-      ]);
-    }
+    indexMjs.createRows(data.map(item => [
+      item.ItemNo,
+      item.Description,
+      item.Qty,
+      item.Date ? item.Date.substring(0, 10) : '',
+    ]));
   });
 };
 // function to be called when all products button is clicked
@@ -76,9 +68,7 @@ export const searchAllProducts = () => {
   const theaderRow = ["Item No", "Description", "Barcode"];
   indexMjs.createThead(theaderRow);
   apiCallsMjs.loadData(indexMjs.searchName.value).then((data) => {
-    for (const item of data) {
-      indexMjs.createRow([item.ItemNo, item.Description, item.Barcode]);
-    }
+    indexMjs.createRows(data.map(item => [item.ItemNo, item.Description, item.Barcode]));
   });
 };
 
@@ -144,14 +134,12 @@ export const writeOff = () => {
   const theaderRow = ["Item No", "Description", "Qty", "Totals"];
   indexMjs.createThead(theaderRow);
   apiCallsMjs.loadWriteOff().then((data) => {
-    for (const item of data) {
-      indexMjs.createRow([
-        item.ItemNo,
-        item.Description,
-        item.QtyPCs,
-        item.TotalPrice,
-      ]);
-    }
+    indexMjs.createRows(data.map(item => [
+      item.ItemNo,
+      item.Description,
+      item.QtyPCs,
+      item.TotalPrice,
+    ]));
   });
 };
 // function to be called when high value button is clicked
@@ -172,14 +160,12 @@ export const highValueReport = () => {
   const theaderRow = ["Item No", "Description", "Qty", "Value"];
   indexMjs.createThead(theaderRow);
   apiCallsMjs.loadHighValue().then((data) => {
-    for (const item of data) {
-      indexMjs.createRow([
-        item.ItemNo,
-        item.Description,
-        item.Qty,
-        item.value,
-      ]);
-    }
+    indexMjs.createRows(data.map(item => [
+      item.ItemNo,
+      item.Description,
+      item.Qty,
+      item.value,
+    ]));
   });
 };
 
@@ -196,6 +182,12 @@ export const userManagement = () => {
   const theaderRow = ["Username", "Store ID", "Admin", "Created", "Actions"];
   indexMjs.createThead(theaderRow);
   apiCallsMjs.loadUsers().then((data) => {
+    let tbody = indexMjs.table.querySelector("tbody");
+    if (!tbody) {
+      tbody = document.createElement("tbody");
+      indexMjs.table.appendChild(tbody);
+    }
+    const fragment = document.createDocumentFragment();
     for (const user of data) {
       const tr = document.createElement("tr");
       tr.className = "table-row";
@@ -223,13 +215,9 @@ export const userManagement = () => {
       actionTd.appendChild(deleteBtn);
       tr.appendChild(actionTd);
 
-      let tbody = document.querySelector("tbody");
-      if (!tbody) {
-        tbody = document.createElement("tbody");
-        indexMjs.table.appendChild(tbody);
-      }
-      tbody.appendChild(tr);
+      fragment.appendChild(tr);
     }
+    tbody.appendChild(fragment);
   });
 };
 
@@ -249,8 +237,6 @@ export const missingAvailiabilityReport = () => {
   const theaderRow = ["Item No", "Description", "Stock"];
   indexMjs.createThead(theaderRow);
   apiCallsMjs.loadMissingAvailability().then((data) => {
-    for (const item of data) {
-      indexMjs.createRow([item.ItemNo, item.Description, item.stock]);
-    }
+    indexMjs.createRows(data.map(item => [item.ItemNo, item.Description, item.stock]));
   });
 };
