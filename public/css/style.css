@@ -208,6 +208,8 @@ body {
   color: white;
   font-size: 15px;
   margin-left: auto;
+  /* reduce the bottom margin */
+  margin-bottom: 0;
   padding: 10px;
   white-space: nowrap;
 }
