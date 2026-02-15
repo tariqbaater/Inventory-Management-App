@@ -7,7 +7,7 @@ export const itemHistoryTableData = () => {
   indexMjs.searchHistory.style.display = "block";
   indexMjs.searchDiv3.style.display = "none";
   indexMjs.table.innerHTML = "";
-  const theaderRow = ["Item No", "Description", "Qty", "Remarks"];
+  const theaderRow = ["Item No", "Description", "Qty", "Date"];
   indexMjs.createThead(theaderRow);
   apiCallsMjs.historyData(indexMjs.searchHistBox.value).then((data) => {
     for (const item of data) {
@@ -15,7 +15,7 @@ export const itemHistoryTableData = () => {
         item.ItemNo,
         item.Description,
         item.QtyPCs,
-        item.Remarks,
+        item.Date ? item.Date.substring(0, 10) : '',
       ]);
     }
   });
@@ -55,7 +55,7 @@ export const dsdDeliveriesTableData = () => {
 // function to be called when search/sales history button is clicked
 export const salesHistoryTableData = () => {
   indexMjs.table.innerHTML = "";
-  const theaderRow = ["Item No", "Description", "Qty", "Date"];
+  const theaderRow = ["Item No", "Description", "Qty", "Amount"];
   indexMjs.createThead(theaderRow);
   apiCallsMjs.salesHistory(indexMjs.searchHistBox.value).then((data) => {
     for (const item of data) {
@@ -63,7 +63,7 @@ export const salesHistoryTableData = () => {
         item.ItemNo,
         item.Description,
         item.Qty,
-        item.Date.substring(0, 10),
+        item.Amount,
       ]);
     }
   });

@@ -17,9 +17,8 @@ export async function kvi() {
     WITH availability AS (
       SELECT count(k.ItemNo) as available
       FROM main_sheet ms
-      JOIN kvi k ON ms.ItemNo = k.ItemNo
-      WHERE ms.physical_qty > 0
-      ORDER BY k.ItemNo
+      JOIN kvi k ON ms.Item_No = k.ItemNo
+      WHERE CAST(ms.Phy_Qty AS SIGNED) > 0
     ),
     kvi_count AS (
       SELECT count(k.ItemNo) as kvi_count FROM kvi k
@@ -40,8 +39,19 @@ export async function wastePercentage() {
 }
 
 export async function readData(item) {
-  const [rows] = await pool.query(`CALL history(?);`, [item]);
-  return rows[0]; // stored procedures return [[resultSet], okPacket]
+  const [rows] = await pool.query(
+    `SELECT d.ItemNo, d.Description, dd.QtyPCs, dd.Date
+     FROM data d
+     JOIN dry_delivey dd ON d.ItemNo = dd.ItemNo
+     WHERE d.ItemNo = ?
+     UNION ALL
+     SELECT d.ItemNo, d.Description, dr.Qty AS QtyPCs, dr.Date
+     FROM data d
+     JOIN dsd_receiving dr ON d.ItemNo = dr.ItemNo
+     WHERE d.ItemNo = ?`,
+    [item, item]
+  );
+  return rows;
 }
 
 export async function dryDelivery(item) {
@@ -62,7 +72,7 @@ export async function dsdDelivery(item) {
 
 export async function salesHistory(item) {
   const [rows] = await pool.query(
-    `SELECT ItemNo, Description, Qty, Date FROM sales WHERE ItemNo = ?;`,
+    `SELECT s.ItemNo, d.Description, s.Qty, s.Amount FROM sales s JOIN data d ON s.ItemNo = d.ItemNo WHERE s.ItemNo = ?;`,
     [item]
   );
   return rows;
@@ -70,26 +80,28 @@ export async function salesHistory(item) {
 
 export async function searchTable() {
   const [rows] = await pool.query(
-    `SELECT ItemNo, Description, Barcode FROM main_sheet`
+    `SELECT ItemNo, Description, Barcode FROM data`
   );
   return rows;
 }
 
 export async function writeOff() {
-  const [rows] = await pool.query(`CALL writeoff();`);
-  return rows[0]; // stored procedures return [[resultSet], okPacket]
+  const [rows] = await pool.query(
+    "SELECT ItemNo, Description, Qty AS QtyPCs, `Total Price` AS TotalPrice FROM write_off"
+  );
+  return rows;
 }
 
 export async function highValue() {
   const [rows] = await pool.query(
-    `SELECT ms.ItemNo, ms.Description, physical_qty AS Qty, ROUND((s.AmountVAT / s.Qty) * physical_qty, 2) as value FROM main_sheet ms JOIN sales s ON ms.ItemNo = s.ItemNo WHERE physical_qty > 0 AND ROUND((s.AmountVAT / s.Qty) * physical_qty, 2) > 500 ORDER BY value DESC`
+    `SELECT ms.Item_No AS ItemNo, ms.Item_Description AS Description, CAST(ms.Phy_Qty AS SIGNED) AS Qty, ROUND((s.AmountVAT / s.Qty) * CAST(ms.Phy_Qty AS SIGNED), 2) as value FROM main_sheet ms JOIN sales s ON ms.Item_No = s.ItemNo WHERE CAST(ms.Phy_Qty AS SIGNED) > 0 AND ROUND((s.AmountVAT / s.Qty) * CAST(ms.Phy_Qty AS SIGNED), 2) > 500 ORDER BY value DESC`
   );
   return rows;
 }
 
 export async function missingAvailability() {
   const [rows] = await pool.query(
-    "SELECT `ac`.ItemNo, `ac`.Description, `ms`.physical_qty AS stock FROM `active_list` ac JOIN `main_sheet` ms ON `ac`.`ItemNo` = `ms`.`ItemNo` JOIN `pack_size` dd ON `ac`.`ItemNo` = `dd`.`ItemNo` WHERE `ac`.`Mode` = 'DC' AND ac.ItemClass IN ('P-A', 'P-B', 'S', 'G-A') AND ms.physical_qty < dd.QtyPCs/`dd`.QtyVPE AND ac.ItemCategory NOT IN ('Smoking Needs', 'Frozen Foods') GROUP BY ac.ItemNo, ac.Description, ac.Mode, ac.ItemCategory, ac.Status, ac.ItemClass, dd.QtyPCs/`dd`.QtyVPE, ms.physical_qty"
+    "SELECT `ac`.ItemNo, `ac`.Description, CAST(`ms`.Phy_Qty AS SIGNED) AS stock FROM `active_list` ac JOIN `main_sheet` ms ON `ac`.`ItemNo` = `ms`.`Item_No` JOIN `pack_size` dd ON `ac`.`ItemNo` = `dd`.`ItemNo` WHERE `ac`.`Mode` = 'DC' AND ac.ItemClass IN ('P-A', 'P-B', 'S', 'G-A') AND CAST(ms.Phy_Qty AS SIGNED) < dd.QtyPCs/`dd`.QtyVPE AND ac.ItemCategory NOT IN ('Smoking Needs', 'Frozen Foods') GROUP BY ac.ItemNo, ac.Description, ac.Mode, ac.ItemCategory, ac.Status, ac.ItemClass, dd.QtyPCs/`dd`.QtyVPE, ms.Phy_Qty"
   );
   return rows;
 }
