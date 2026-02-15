@@ -2,12 +2,9 @@
 import express from "express";
 import path from "path";
 import cors from "cors";
-import { Parser } from "json2csv";
-import fetch from 'node-fetch';
 import dotenv from 'dotenv';
 import helmet from 'helmet';
 import winston from 'winston';
-import { query, validationResult } from 'express-validator';
 
 dotenv.config();
 
@@ -34,7 +31,7 @@ app.use(
         scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://cdnjs.cloudflare.com"],
         styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com"],
         imgSrc: ["'self'", "data:"],
-        connectSrc: ["'self'", "https://cfmo8g9ssz.sqlite.cloud:8090"],
+        connectSrc: ["'self'"],
         fontSrc: ["'self'", "data:", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
       },
     },

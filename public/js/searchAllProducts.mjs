@@ -133,7 +133,7 @@ export const writeOff = () => {
   indexMjs.printBtnDiv.style.display = "flex";
   indexMjs.printBtnDiv.innerHTML = `
     <div class="print-btn-container">
-     <a href="https://retail-inventory-app.onrender.com/writeoff_csv" class="download-btn">
+     <a href="/api/v1/writeoff_csv" class="download-btn">
         <button class="print-btn">
           <i class="fa-solid fa-print"></i> Print Report
         </button></a>
@@ -160,7 +160,7 @@ export const highValueReport = () => {
   indexMjs.printBtnDiv.style.display = "flex";
   indexMjs.printBtnDiv.innerHTML = `
         <div class="print-btn-container">
-     <a href="https://retail-inventory-app.onrender.com/high_value_csv" class="download-btn">
+     <a href="/api/v1/high_value_csv" class="download-btn">
         <button class="print-btn">
           <i class="fa-solid fa-print"></i> Print Report
         </button></a>
@@ -189,7 +189,7 @@ export const missingAvailiabilityReport = () => {
   indexMjs.printBtnDiv.style.display = "flex";
   indexMjs.printBtnDiv.innerHTML = `
     <div class="print-btn-container">
-     <a href="https://retail-inventory-app.onrender.com/missing_availability_csv" class="download-btn">
+     <a href="/api/v1/missing_availability_csv" class="download-btn">
         <button class="print-btn">
           <i class="fa-solid fa-print"></i> Print Report
         </button></a>

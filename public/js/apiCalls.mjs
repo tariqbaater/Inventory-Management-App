@@ -1,7 +1,7 @@
 
 //*********** API *************
 // Base URL for the API
-const BASE_URL = 'https://cfmo8g9ssz.sqlite.cloud:8090/v2/functions';
+const BASE_URL = '/api/v1';
 
 // Show/hide the loading indicator during API calls
 let loaderRequestCount = 0;
