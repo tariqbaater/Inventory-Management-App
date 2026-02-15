@@ -1,6 +1,6 @@
 // *********** IMPORTS ***********
 import * as searchAllProductsMjs from "./searchAllProducts.mjs";
-import { login, logout } from "./apiCalls.mjs";
+import { login, logout, fetchCurrentUser, createUserApi, deleteUserApi } from "./apiCalls.mjs";
 
 // *********** VARIABLES ***********
 const docTitle = document.title;
@@ -33,6 +33,10 @@ const writeOffBtn = document.querySelector("#write-off");
 const highValueBtn = document.querySelector("#high-value");
 const missingAvailiabilityBtn = document.querySelector("#missing-availability");
 export const printBtnDiv = document.querySelector(".print-btn-container");
+const userInfoSpan = document.querySelector("#user-info");
+const userManagementBtn = document.querySelector("#user-management");
+export const userFormContainer = document.querySelector("#user-form-container");
+const createUserForm = document.querySelector("#create-user-form");
 
 // *********** FUNCTIONS ***********
 // function for creating dynamic th rows
@@ -71,6 +75,16 @@ export const createRow = (rowData) => {
     tbody.appendChild(tr);
 };
 
+// Fetch and display current user info in navbar
+async function populateUserInfo() {
+    const user = await fetchCurrentUser();
+    if (user) {
+        const storeLabel = user.storeId ? ` | Store: ${user.storeId}` : '';
+        userInfoSpan.textContent = `${user.username}${storeLabel}`;
+        userManagementBtn.style.display = user.isAdmin ? '' : 'none';
+    }
+}
+
 // Helper to show the login modal and hide app content
 function showLoginModal() {
     modal.style.display = "block";
@@ -80,13 +94,17 @@ function showLoginModal() {
     searchDiv3.style.display = "none";
     searchDiv2.style.display = "none";
     searchHistory.style.display = "none";
+    userFormContainer.style.display = "none";
     table.innerHTML = "";
+    userInfoSpan.textContent = "";
+    userManagementBtn.style.display = "none";
 }
 
 // Helper to show the app after successful auth
-function showApp() {
+async function showApp() {
     modal.style.display = "none";
     navbar.style.display = "block";
+    await populateUserInfo();
     searchAllProductsMjs.dashBoard();
 }
 
@@ -105,6 +123,7 @@ window.onload = () => {
     searchDiv3.style.display = "none";
     searchDiv2.style.display = "none";
     searchHistory.style.display = "none";
+    userFormContainer.style.display = "none";
     table.innerHTML = "";
     modal.style.display = "none";
 
@@ -112,6 +131,7 @@ window.onload = () => {
     // if not the 401 handler will show the login modal
     searchAllProductsMjs.dashBoard().then(() => {
         navbar.style.display = "block";
+        populateUserInfo();
     }).catch(() => {
         // 401 handler already shows modal
     });
@@ -143,6 +163,7 @@ allProductsBtn.addEventListener("click", () => {
     searchDiv2.style.display = "none";
     printBtnDiv.style.display = "none";
     dashboard.style.display = "none";
+    userFormContainer.style.display = "none";
     table.innerHTML = "";
     searchAllProductsMjs.searchAllProducts();
 });
@@ -173,6 +194,7 @@ dashboardBtn.addEventListener("click", () => {
     searchDiv3.style.display = "none";
     searchDiv2.style.display = "none";
     printBtnDiv.style.display = "none";
+    userFormContainer.style.display = "none";
     table.innerHTML = "";
     searchAllProductsMjs.dashBoard();
 });
@@ -184,6 +206,7 @@ itemHistoryBtn.addEventListener("click", () => {
     searchDiv3.style.display = "none";
     searchDiv2.style.display = "none";
     printBtnDiv.style.display = "none";
+    userFormContainer.style.display = "none";
     table.innerHTML = "";
     if (searchHistBox.value.length > 0) {
         searchAllProductsMjs.itemHistoryTableData(searchHistBox.value);
@@ -229,12 +252,14 @@ salesHistoryBtn.addEventListener("click", () => {
 // listen for write off button
 writeOffBtn.addEventListener("click", () => {
     dashboard.style.display = "none";
+    userFormContainer.style.display = "none";
     searchAllProductsMjs.writeOff();
 });
 
 // listen for high value button
 highValueBtn.addEventListener("click", () => {
     dashboard.style.display = "none";
+    userFormContainer.style.display = "none";
     searchAllProductsMjs.highValueReport();
 });
 
@@ -261,12 +286,54 @@ searchLiveBox.addEventListener("input", (event) => {
 // listen for missing availability button
 missingAvailiabilityBtn.addEventListener("click", () => {
     dashboard.style.display = "none";
+    userFormContainer.style.display = "none";
     searchAllProductsMjs.missingAvailiabilityReport();
+});
+
+// listen for user management button
+userManagementBtn.addEventListener("click", () => {
+    dashboard.style.display = "none";
+    searchHistory.style.display = "none";
+    searchDiv3.style.display = "none";
+    searchDiv2.style.display = "none";
+    printBtnDiv.style.display = "none";
+    table.innerHTML = "";
+    searchAllProductsMjs.userManagement();
+});
+
+// listen for create user form submission
+createUserForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const username = document.querySelector("#new-username").value.trim();
+    const password = document.querySelector("#new-password").value;
+    const storeId = document.querySelector("#new-store-id").value.trim();
+    const isAdmin = document.querySelector("#new-is-admin").checked;
+    try {
+        await createUserApi(username, password, isAdmin, storeId);
+        createUserForm.reset();
+        searchAllProductsMjs.userManagement();
+    } catch (err) {
+        alert(err.message);
+    }
+});
+
+// delegated click handler for delete buttons in user table
+document.querySelector(".table").addEventListener("click", async (e) => {
+    if (e.target.classList.contains("delete-btn")) {
+        const userId = e.target.dataset.userId;
+        if (!confirm("Are you sure you want to delete this user?")) return;
+        try {
+            await deleteUserApi(userId);
+            searchAllProductsMjs.userManagement();
+        } catch (err) {
+            alert(err.message);
+        }
+    }
 });
 
 // listen for tab change
 window.addEventListener("blur", () => {
-    document.title = "Come back!😁";
+    document.title = "Come back!\u{1F601}";
 });
 window.addEventListener("focus", () => {
     document.title = docTitle;

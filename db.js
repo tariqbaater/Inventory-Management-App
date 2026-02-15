@@ -101,10 +101,33 @@ export async function highValue() {
 
 export async function findUserByUsername(username) {
   const [rows] = await pool.query(
-    'SELECT id, username, password_hash FROM users WHERE username = ?',
+    'SELECT id, username, password_hash, is_admin, store_id FROM users WHERE username = ?',
     [username]
   );
   return rows[0] || null;
+}
+
+export async function getAllUsers() {
+  const [rows] = await pool.query(
+    'SELECT id, username, is_admin, store_id, created_at FROM users'
+  );
+  return rows;
+}
+
+export async function createUser(username, passwordHash, isAdmin, storeId) {
+  const [result] = await pool.query(
+    'INSERT INTO users (username, password_hash, is_admin, store_id) VALUES (?, ?, ?, ?)',
+    [username, passwordHash, isAdmin ? 1 : 0, storeId || null]
+  );
+  return result;
+}
+
+export async function deleteUser(id) {
+  const [result] = await pool.query(
+    'DELETE FROM users WHERE id = ?',
+    [id]
+  );
+  return result;
 }
 
 export async function missingAvailability() {

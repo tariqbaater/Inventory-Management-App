@@ -184,6 +184,55 @@ export const highValueReport = () => {
 };
 
 // function to be called when missing availability button is clicked
+// function to be called when user management button is clicked
+export const userManagement = () => {
+  indexMjs.searchHistory.style.display = "none";
+  indexMjs.searchDiv3.style.display = "none";
+  indexMjs.searchDiv2.style.display = "none";
+  indexMjs.printBtnDiv.style.display = "none";
+  indexMjs.dashboard.style.display = "none";
+  indexMjs.userFormContainer.style.display = "block";
+  indexMjs.table.innerHTML = "";
+  const theaderRow = ["Username", "Store ID", "Admin", "Created", "Actions"];
+  indexMjs.createThead(theaderRow);
+  apiCallsMjs.loadUsers().then((data) => {
+    for (const user of data) {
+      const tr = document.createElement("tr");
+      tr.className = "table-row";
+
+      const cells = [
+        user.username,
+        user.store_id || '-',
+        user.is_admin ? 'Yes' : 'No',
+        user.created_at ? new Date(user.created_at).toLocaleDateString() : '-',
+      ];
+
+      for (const val of cells) {
+        const td = document.createElement("td");
+        td.className = "table-data";
+        td.textContent = val;
+        tr.appendChild(td);
+      }
+
+      const actionTd = document.createElement("td");
+      actionTd.className = "table-data";
+      const deleteBtn = document.createElement("button");
+      deleteBtn.className = "delete-btn";
+      deleteBtn.textContent = "Delete";
+      deleteBtn.dataset.userId = user.id;
+      actionTd.appendChild(deleteBtn);
+      tr.appendChild(actionTd);
+
+      let tbody = document.querySelector("tbody");
+      if (!tbody) {
+        tbody = document.createElement("tbody");
+        indexMjs.table.appendChild(tbody);
+      }
+      tbody.appendChild(tr);
+    }
+  });
+};
+
 export const missingAvailiabilityReport = () => {
   indexMjs.searchHistory.style.display = "none";
   indexMjs.searchDiv3.style.display = "block";

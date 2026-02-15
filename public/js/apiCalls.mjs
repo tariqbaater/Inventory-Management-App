@@ -109,3 +109,41 @@ export const loadHighValue = () => fetchData('high_value');
 
 // Read missing availability data from db api
 export const loadMissingAvailability = () => fetchData('missing_availability');
+
+// --- User management API functions ---
+export const fetchCurrentUser = async () => {
+  const response = await fetch(`${BASE_URL}/me`, { credentials: 'include' });
+  if (response.status === 401) {
+    window.dispatchEvent(new CustomEvent('auth:required'));
+    return null;
+  }
+  return response.json();
+};
+
+export const loadUsers = () => fetchData('users');
+
+export const createUserApi = async (username, password, isAdmin, storeId) => {
+  const response = await fetch(`${BASE_URL}/users`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({ username, password, isAdmin, storeId }),
+  });
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({}));
+    throw new Error(data.error || data.errors?.[0]?.msg || 'Failed to create user');
+  }
+  return response.json();
+};
+
+export const deleteUserApi = async (id) => {
+  const response = await fetch(`${BASE_URL}/users/${id}`, {
+    method: 'DELETE',
+    credentials: 'include',
+  });
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({}));
+    throw new Error(data.error || 'Failed to delete user');
+  }
+  return response.json();
+};

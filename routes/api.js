@@ -2,7 +2,7 @@ import express from 'express';
 import bcrypt from 'bcrypt';
 import { Parser } from 'json2csv';
 import { body, query, validationResult } from 'express-validator';
-import { requireAuth } from '../middleware/auth.js';
+import { requireAuth, requireAdmin } from '../middleware/auth.js';
 import {
   kvi,
   wastePercentage,
@@ -15,6 +15,9 @@ import {
   highValue,
   missingAvailability,
   findUserByUsername,
+  getAllUsers,
+  createUser as createUserInDb,
+  deleteUser as deleteUserInDb,
 } from '../db.js';
 
 const router = express.Router();
@@ -41,6 +44,9 @@ router.post(
       req.session.regenerate((err) => {
         if (err) return next(err);
         req.session.userId = user.id;
+        req.session.username = user.username;
+        req.session.isAdmin = !!user.is_admin;
+        req.session.storeId = user.store_id;
         req.session.save((err) => {
           if (err) return next(err);
           res.json({ message: 'Login successful' });
@@ -139,6 +145,63 @@ router.get("/missing_availability", async (req, res, next) => {
   try {
     const data = await missingAvailability();
     res.json({ data });
+  } catch (err) { next(err); }
+});
+
+// --- Current user info ---
+router.get('/me', (req, res) => {
+  res.json({
+    username: req.session.username,
+    storeId: req.session.storeId,
+    isAdmin: req.session.isAdmin,
+  });
+});
+
+// --- Admin user management ---
+router.get('/users', requireAdmin, async (req, res, next) => {
+  try {
+    const data = await getAllUsers();
+    res.json({ data });
+  } catch (err) { next(err); }
+});
+
+router.post(
+  '/users',
+  requireAdmin,
+  [
+    body('username').isString().trim().notEmpty().withMessage('Username is required'),
+    body('password').isString().isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
+    body('isAdmin').optional().isBoolean(),
+    body('storeId').optional({ values: 'falsy' }).isString().trim(),
+  ],
+  async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+
+    try {
+      const hash = await bcrypt.hash(req.body.password, 12);
+      await createUserInDb(req.body.username, hash, req.body.isAdmin || false, req.body.storeId);
+      res.status(201).json({ message: 'User created' });
+    } catch (err) {
+      if (err.code === 'ER_DUP_ENTRY') {
+        return res.status(409).json({ error: 'Username already exists' });
+      }
+      next(err);
+    }
+  }
+);
+
+router.delete('/users/:id', requireAdmin, async (req, res, next) => {
+  try {
+    const targetId = parseInt(req.params.id, 10);
+    if (targetId === req.session.userId) {
+      return res.status(400).json({ error: 'Cannot delete your own account' });
+    }
+    const result = await deleteUserInDb(targetId);
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.json({ message: 'User deleted' });
   } catch (err) { next(err); }
 });
 

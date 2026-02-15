@@ -25,13 +25,15 @@ await connection.execute(`
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(255) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
+    is_admin TINYINT(1) NOT NULL DEFAULT 0,
+    store_id VARCHAR(50) DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   )
 `);
 
 const hash = await bcrypt.hash(password, 12);
 await connection.execute(
-  'INSERT INTO users (username, password_hash) VALUES (?, ?) ON DUPLICATE KEY UPDATE password_hash = VALUES(password_hash)',
+  'INSERT INTO users (username, password_hash, is_admin) VALUES (?, ?, 1) ON DUPLICATE KEY UPDATE password_hash = VALUES(password_hash), is_admin = 1',
   [username, hash]
 );
 
