@@ -109,7 +109,7 @@ body {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(255,255,255,0.7);
+  background: rgba(255, 255, 255, 0.7);
   align-items: center;
   justify-content: center;
 }
@@ -134,8 +134,12 @@ body {
   animation: spin 0.6s linear infinite reverse;
 }
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .logo {
@@ -202,7 +206,7 @@ body {
 /* User info in navbar */
 #user-info {
   color: white;
-  font-size: 13px;
+  font-size: 15px;
   margin-left: auto;
   padding: 10px;
   white-space: nowrap;
