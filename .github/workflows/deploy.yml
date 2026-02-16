@@ -17,4 +17,4 @@ jobs:
 
       - name: Restart app container
         run: |
-          echo "Code pushed - Dokploy handles deployment"
+          docker restart inventory-management-dukan-vhhgqi.1.b07vbwnoefjcpig0mumekatc0
