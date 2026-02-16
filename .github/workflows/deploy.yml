@@ -1,4 +1,4 @@
-name: Deploy to Dokploy
+name: Deploy
 
 on:
   push:
@@ -10,11 +10,14 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - name: Pull latest code
+      - name: Pull latest code inside container
         run: |
-          cd /app
-          git pull origin main
+          docker exec inventory-management-dukan-vhhgqi.1.b07vbwnoefjcpig0mumekatc0 git pull origin main
 
-      - name: Restart app container
+      - name: Install dependencies (if needed)
+        run: |
+          docker exec inventory-management-dukan-vhhgqi.1.b07vbwnoefjcpig0mumekatc0 npm install
+
+      - name: Restart app process
         run: |
           docker restart inventory-management-dukan-vhhgqi.1.b07vbwnoefjcpig0mumekatc0
