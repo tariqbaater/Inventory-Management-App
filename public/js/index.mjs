@@ -286,23 +286,13 @@ highValueBtn.addEventListener("click", () => {
     searchAllProductsMjs.highValueReport();
 });
 
-// listen for the search-live input (debounced 300ms)
+// listen for the search-live input (debounced 300ms, server-side search)
 let searchTimeout;
 searchLiveBox.addEventListener("input", (event) => {
     clearTimeout(searchTimeout);
     searchTimeout = setTimeout(() => {
-        const value = event.target.value.toLowerCase();
-        const filteredRows = table.querySelectorAll("tbody tr");
-        filteredRows.forEach((row) => {
-            const cells = row.querySelectorAll("td");
-            let found = false;
-            cells.forEach((cell) => {
-                if (cell.textContent.toLowerCase().includes(value)) {
-                    found = true;
-                }
-            });
-            row.style.display = found ? "" : "none";
-        });
+        const value = event.target.value.trim();
+        searchAllProductsMjs.searchCurrentView(value);
     }, 300);
 });
 

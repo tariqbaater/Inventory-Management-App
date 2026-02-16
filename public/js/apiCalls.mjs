@@ -93,10 +93,12 @@ export const dsdDelivery = (id) => fetchData('dsd_deliveries', `?id=${id}`);
 export const salesHistory = (id) => fetchData('sales_history', `?id=${id}`);
 
 // Generic paginated fetch — returns { data, total, page, limit }
-const fetchPaginated = async (endpoint, page = 1, limit = 50) => {
+const fetchPaginated = async (endpoint, page = 1, limit = 50, search = '') => {
   showLoader();
   try {
-    const response = await fetch(`${BASE_URL}/${endpoint}?page=${page}&limit=${limit}`, {
+    let url = `${BASE_URL}/${endpoint}?page=${page}&limit=${limit}`;
+    if (search) url += `&search=${encodeURIComponent(search)}`;
+    const response = await fetch(url, {
       credentials: 'include',
     });
     if (response.status === 401) {
@@ -119,7 +121,7 @@ const fetchPaginated = async (endpoint, page = 1, limit = 50) => {
 };
 
 // Read search data from db api (paginated)
-export const loadData = (page = 1, limit = 50) => fetchPaginated('search_products', page, limit);
+export const loadData = (page = 1, limit = 50, search = '') => fetchPaginated('search_products', page, limit, search);
 
 // Read top products data from db api
 export const loadKvi = () => fetchData('kvi').then(data => data[0]);
@@ -128,13 +130,13 @@ export const loadKvi = () => fetchData('kvi').then(data => data[0]);
 export const loadWastePercentage = () => fetchData('waste_percentage').then(data => data[0]);
 
 // Read write-off data from db api (paginated)
-export const loadWriteOff = (page = 1, limit = 50) => fetchPaginated('write_off', page, limit);
+export const loadWriteOff = (page = 1, limit = 50, search = '') => fetchPaginated('write_off', page, limit, search);
 
 // Read high value data from db api (paginated)
-export const loadHighValue = (page = 1, limit = 50) => fetchPaginated('high_value', page, limit);
+export const loadHighValue = (page = 1, limit = 50, search = '') => fetchPaginated('high_value', page, limit, search);
 
 // Read missing availability data from db api (paginated)
-export const loadMissingAvailability = (page = 1, limit = 50) => fetchPaginated('missing_availability', page, limit);
+export const loadMissingAvailability = (page = 1, limit = 50, search = '') => fetchPaginated('missing_availability', page, limit, search);
 
 // --- User management API functions ---
 export const fetchCurrentUser = async () => {

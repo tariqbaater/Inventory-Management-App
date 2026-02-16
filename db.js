@@ -78,39 +78,58 @@ export async function salesHistory(item) {
   return rows;
 }
 
-export async function searchTable(page, limit) {
-  const baseQuery = 'SELECT ItemNo, Description, Barcode FROM data';
+export async function searchTable(page, limit, search) {
+  let baseQuery = 'SELECT ItemNo, Description, Barcode FROM data';
+  const searchParams = [];
+  if (search) {
+    const like = `%${search}%`;
+    baseQuery += ' WHERE ItemNo LIKE ? OR Description LIKE ? OR Barcode LIKE ?';
+    searchParams.push(like, like, like);
+  }
   if (page != null && limit != null) {
     const offset = (page - 1) * limit;
-    const [[{ total }]] = await pool.query('SELECT COUNT(*) as total FROM data');
-    const [rows] = await pool.query(`${baseQuery} LIMIT ? OFFSET ?`, [limit, offset]);
+    const [[{ total }]] = await pool.query(`SELECT COUNT(*) as total FROM (${baseQuery}) AS t`, searchParams);
+    const [rows] = await pool.query(`${baseQuery} LIMIT ? OFFSET ?`, [...searchParams, limit, offset]);
     return { rows, total };
   }
-  const [rows] = await pool.query(baseQuery);
+  const [rows] = await pool.query(baseQuery, searchParams);
   return rows;
 }
 
-export async function writeOff(page, limit) {
-  const baseQuery = "SELECT ItemNo, Description, SUM(Qty) AS QtyPCs, SUM(`Total Price`) AS TotalPrice FROM write_off GROUP BY ItemNo, Description";
+export async function writeOff(page, limit, search) {
+  let whereClause = '';
+  const searchParams = [];
+  if (search) {
+    const like = `%${search}%`;
+    whereClause = ' WHERE (ItemNo LIKE ? OR Description LIKE ?)';
+    searchParams.push(like, like);
+  }
+  const baseQuery = `SELECT ItemNo, Description, SUM(Qty) AS QtyPCs, SUM(\`Total Price\`) AS TotalPrice FROM write_off${whereClause} GROUP BY ItemNo, Description`;
   if (page != null && limit != null) {
     const offset = (page - 1) * limit;
-    const [[{ total }]] = await pool.query(`SELECT COUNT(*) as total FROM (${baseQuery}) AS t`);
-    const [rows] = await pool.query(`${baseQuery} LIMIT ? OFFSET ?`, [limit, offset]);
+    const [[{ total }]] = await pool.query(`SELECT COUNT(*) as total FROM (${baseQuery}) AS t`, searchParams);
+    const [rows] = await pool.query(`${baseQuery} LIMIT ? OFFSET ?`, [...searchParams, limit, offset]);
     return { rows, total };
   }
-  const [rows] = await pool.query(baseQuery);
+  const [rows] = await pool.query(baseQuery, searchParams);
   return rows;
 }
 
-export async function highValue(page, limit) {
-  const baseQuery = 'SELECT ms.ItemNo, ms.Description, ms.Qty, ROUND((s.AmountVAT / s.Qty) * ms.Qty, 2) as value FROM main_sheet ms JOIN sales s ON ms.ItemNo = s.ItemNo WHERE ms.Qty > 0 AND ROUND((s.AmountVAT / s.Qty) * ms.Qty, 2) > 500';
+export async function highValue(page, limit, search) {
+  let baseQuery = 'SELECT ms.ItemNo, ms.Description, ms.Qty, ROUND((s.AmountVAT / s.Qty) * ms.Qty, 2) as value FROM main_sheet ms JOIN sales s ON ms.ItemNo = s.ItemNo WHERE ms.Qty > 0 AND ROUND((s.AmountVAT / s.Qty) * ms.Qty, 2) > 500';
+  const searchParams = [];
+  if (search) {
+    const like = `%${search}%`;
+    baseQuery += ' AND (ms.ItemNo LIKE ? OR ms.Description LIKE ?)';
+    searchParams.push(like, like);
+  }
   if (page != null && limit != null) {
     const offset = (page - 1) * limit;
-    const [[{ total }]] = await pool.query(`SELECT COUNT(*) as total FROM (${baseQuery}) AS t`);
-    const [rows] = await pool.query(`${baseQuery} ORDER BY value DESC LIMIT ? OFFSET ?`, [limit, offset]);
+    const [[{ total }]] = await pool.query(`SELECT COUNT(*) as total FROM (${baseQuery}) AS t`, searchParams);
+    const [rows] = await pool.query(`${baseQuery} ORDER BY value DESC LIMIT ? OFFSET ?`, [...searchParams, limit, offset]);
     return { rows, total };
   }
-  const [rows] = await pool.query(`${baseQuery} ORDER BY value DESC`);
+  const [rows] = await pool.query(`${baseQuery} ORDER BY value DESC`, searchParams);
   return rows;
 }
 
@@ -145,14 +164,23 @@ export async function deleteUser(id) {
   return result;
 }
 
-export async function missingAvailability(page, limit) {
-  const baseQuery = "SELECT `ac`.ItemNo, `ac`.Description, `ms`.Qty AS stock FROM `active_list` ac JOIN `main_sheet` ms ON `ac`.`ItemNo` = `ms`.`ItemNo` JOIN `pack_size` dd ON `ac`.`ItemNo` = `dd`.`ItemNo` WHERE `ac`.`Mode` = 'DC' AND ac.ItemClass IN ('P-A', 'P-B', 'S', 'G-A') AND ms.Qty < dd.QtyPCs/`dd`.QtyVPE AND ac.ItemCategory NOT IN ('Smoking Needs', 'Frozen Foods') GROUP BY ac.ItemNo, ac.Description, ac.Mode, ac.ItemCategory, ac.Status, ac.ItemClass, dd.QtyPCs/`dd`.QtyVPE, ms.Qty";
+export async function missingAvailability(page, limit, search) {
+  const selectFrom = "SELECT `ac`.ItemNo, `ac`.Description, `ms`.Qty AS stock FROM `active_list` ac JOIN `main_sheet` ms ON `ac`.`ItemNo` = `ms`.`ItemNo` JOIN `pack_size` dd ON `ac`.`ItemNo` = `dd`.`ItemNo`";
+  let whereClause = " WHERE `ac`.`Mode` = 'DC' AND ac.ItemClass IN ('P-A', 'P-B', 'S', 'G-A') AND ms.Qty < dd.QtyPCs/`dd`.QtyVPE AND ac.ItemCategory NOT IN ('Smoking Needs', 'Frozen Foods')";
+  const groupBy = " GROUP BY ac.ItemNo, ac.Description, ac.Mode, ac.ItemCategory, ac.Status, ac.ItemClass, dd.QtyPCs/`dd`.QtyVPE, ms.Qty";
+  const searchParams = [];
+  if (search) {
+    const like = `%${search}%`;
+    whereClause += ' AND (ac.ItemNo LIKE ? OR ac.Description LIKE ?)';
+    searchParams.push(like, like);
+  }
+  const baseQuery = selectFrom + whereClause + groupBy;
   if (page != null && limit != null) {
     const offset = (page - 1) * limit;
-    const [[{ total }]] = await pool.query(`SELECT COUNT(*) as total FROM (${baseQuery}) AS t`);
-    const [rows] = await pool.query(`${baseQuery} LIMIT ? OFFSET ?`, [limit, offset]);
+    const [[{ total }]] = await pool.query(`SELECT COUNT(*) as total FROM (${baseQuery}) AS t`, searchParams);
+    const [rows] = await pool.query(`${baseQuery} LIMIT ? OFFSET ?`, [...searchParams, limit, offset]);
     return { rows, total };
   }
-  const [rows] = await pool.query(baseQuery);
+  const [rows] = await pool.query(baseQuery, searchParams);
   return rows;
 }

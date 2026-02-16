@@ -4,6 +4,7 @@ import * as indexMjs from "./index.mjs";
 // *********** PAGINATION STATE ***********
 let currentPage = 1;
 let currentLimit = 50;
+let currentSearch = '';
 let currentViewFn = null;
 
 function updatePagination(total, page, limit) {
@@ -16,7 +17,13 @@ function updatePagination(total, page, limit) {
 
 export function navigatePage(delta) {
   if (currentViewFn) {
-    currentViewFn(currentPage + delta);
+    currentViewFn(currentPage + delta, currentSearch);
+  }
+}
+
+export function searchCurrentView(search) {
+  if (currentViewFn) {
+    currentViewFn(1, search);
   }
 }
 
@@ -104,8 +111,9 @@ export const salesHistoryTableData = () => {
   });
 };
 // function to be called when all products button is clicked
-export const searchAllProducts = (page = 1) => {
+export const searchAllProducts = (page = 1, search = '') => {
   currentPage = page;
+  currentSearch = search;
   currentViewFn = searchAllProducts;
   indexMjs.searchHistory.style.display = "none";
   indexMjs.searchDiv3.style.display = "block";
@@ -117,7 +125,7 @@ export const searchAllProducts = (page = 1) => {
   indexMjs.table.innerHTML = "";
   const theaderRow = ["Item No", "Description", "Barcode"];
   indexMjs.createThead(theaderRow);
-  apiCallsMjs.loadData(page, currentLimit).then((result) => {
+  apiCallsMjs.loadData(page, currentLimit, search).then((result) => {
     if (!result.data || result.data.length === 0) {
       indexMjs.noResults.style.display = "block";
       indexMjs.paginationControls.style.display = "none";
@@ -176,8 +184,9 @@ export const dashBoard = () => {
 };
 
 // function to be called when write off button is clicked
-export const writeOff = (page = 1) => {
+export const writeOff = (page = 1, search = '') => {
   currentPage = page;
+  currentSearch = search;
   currentViewFn = writeOff;
   indexMjs.searchHistory.style.display = "none";
   indexMjs.searchDiv3.style.display = "block";
@@ -197,7 +206,7 @@ export const writeOff = (page = 1) => {
   indexMjs.table.innerHTML = "";
   const theaderRow = ["Item No", "Description", "Qty", "Totals"];
   indexMjs.createThead(theaderRow);
-  apiCallsMjs.loadWriteOff(page, currentLimit).then((result) => {
+  apiCallsMjs.loadWriteOff(page, currentLimit, search).then((result) => {
     if (!result.data || result.data.length === 0) {
       indexMjs.noResults.style.display = "block";
       indexMjs.paginationControls.style.display = "none";
@@ -213,8 +222,9 @@ export const writeOff = (page = 1) => {
   });
 };
 // function to be called when high value button is clicked
-export const highValueReport = (page = 1) => {
+export const highValueReport = (page = 1, search = '') => {
   currentPage = page;
+  currentSearch = search;
   currentViewFn = highValueReport;
   indexMjs.searchHistory.style.display = "none";
   indexMjs.searchDiv3.style.display = "block";
@@ -235,7 +245,7 @@ export const highValueReport = (page = 1) => {
   indexMjs.table.innerHTML = "";
   const theaderRow = ["Item No", "Description", "Qty", "Value"];
   indexMjs.createThead(theaderRow);
-  apiCallsMjs.loadHighValue(page, currentLimit).then((result) => {
+  apiCallsMjs.loadHighValue(page, currentLimit, search).then((result) => {
     if (!result.data || result.data.length === 0) {
       indexMjs.noResults.style.display = "block";
       indexMjs.paginationControls.style.display = "none";
@@ -309,8 +319,9 @@ export const userManagement = () => {
 };
 
 // function to be called when missing availability button is clicked
-export const missingAvailiabilityReport = (page = 1) => {
+export const missingAvailiabilityReport = (page = 1, search = '') => {
   currentPage = page;
+  currentSearch = search;
   currentViewFn = missingAvailiabilityReport;
   indexMjs.searchHistory.style.display = "none";
   indexMjs.searchDiv3.style.display = "block";
@@ -330,7 +341,7 @@ export const missingAvailiabilityReport = (page = 1) => {
   indexMjs.table.innerHTML = "";
   const theaderRow = ["Item No", "Description", "Stock"];
   indexMjs.createThead(theaderRow);
-  apiCallsMjs.loadMissingAvailability(page, currentLimit).then((result) => {
+  apiCallsMjs.loadMissingAvailability(page, currentLimit, search).then((result) => {
     if (!result.data || result.data.length === 0) {
       indexMjs.noResults.style.display = "block";
       indexMjs.paginationControls.style.display = "none";
