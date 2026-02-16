@@ -33,6 +33,11 @@ const writeOffBtn = document.querySelector("#write-off");
 const highValueBtn = document.querySelector("#high-value");
 const missingAvailiabilityBtn = document.querySelector("#missing-availability");
 export const printBtnDiv = document.querySelector(".print-btn-container");
+export const paginationControls = document.querySelector("#pagination-controls");
+export const prevPageBtn = document.querySelector("#prev-page");
+export const nextPageBtn = document.querySelector("#next-page");
+export const pageInfo = document.querySelector("#page-info");
+export const noResults = document.querySelector("#no-results");
 const userInfoSpan = document.querySelector("#user-info");
 const userManagementBtn = document.querySelector("#user-management");
 export const userFormContainer = document.querySelector("#user-form-container");
@@ -104,6 +109,8 @@ function showLoginModal() {
     searchDiv2.style.display = "none";
     searchHistory.style.display = "none";
     userFormContainer.style.display = "none";
+    paginationControls.style.display = "none";
+    noResults.style.display = "none";
     table.innerHTML = "";
     userInfoSpan.textContent = "";
     userManagementBtn.style.display = "none";
@@ -133,6 +140,8 @@ window.onload = () => {
     searchDiv2.style.display = "none";
     searchHistory.style.display = "none";
     userFormContainer.style.display = "none";
+    paginationControls.style.display = "none";
+    noResults.style.display = "none";
     table.innerHTML = "";
     modal.style.display = "none";
 
@@ -167,13 +176,8 @@ logOutBtn.addEventListener("click", async () => {
 
 // listen for the all products button to load all products
 allProductsBtn.addEventListener("click", () => {
-    searchHistory.style.display = "none";
-    searchDiv3.style.display = "block";
-    searchDiv2.style.display = "none";
-    printBtnDiv.style.display = "none";
-    dashboard.style.display = "none";
-    userFormContainer.style.display = "none";
-    table.innerHTML = "";
+    paginationControls.style.display = "none";
+    noResults.style.display = "none";
     searchAllProductsMjs.searchAllProducts();
 });
 
@@ -204,6 +208,8 @@ dashboardBtn.addEventListener("click", () => {
     searchDiv2.style.display = "none";
     printBtnDiv.style.display = "none";
     userFormContainer.style.display = "none";
+    paginationControls.style.display = "none";
+    noResults.style.display = "none";
     table.innerHTML = "";
     searchAllProductsMjs.dashBoard();
 });
@@ -216,6 +222,8 @@ itemHistoryBtn.addEventListener("click", () => {
     searchDiv2.style.display = "none";
     printBtnDiv.style.display = "none";
     userFormContainer.style.display = "none";
+    paginationControls.style.display = "none";
+    noResults.style.display = "none";
     table.innerHTML = "";
     if (searchHistBox.value.length > 0) {
         searchAllProductsMjs.itemHistoryTableData(searchHistBox.value);
@@ -226,6 +234,8 @@ itemHistoryBtn.addEventListener("click", () => {
 whDeliveriesBtn.addEventListener("click", () => {
     searchHistory.style.display = "block";
     dashboard.style.display = "none";
+    paginationControls.style.display = "none";
+    noResults.style.display = "none";
     table.innerHTML = "";
     if (searchHistBox.value.length > 0) {
         searchAllProductsMjs.whDeliveriesTableData(searchHistBox.value);
@@ -238,6 +248,8 @@ whDeliveriesBtn.addEventListener("click", () => {
 dsdDeliveriesBtn.addEventListener("click", () => {
     searchHistory.style.display = "block";
     dashboard.style.display = "none";
+    paginationControls.style.display = "none";
+    noResults.style.display = "none";
     table.innerHTML = "";
     if (searchHistBox.value.length > 0) {
         searchAllProductsMjs.dsdDeliveriesTableData(searchHistBox.value);
@@ -250,6 +262,8 @@ dsdDeliveriesBtn.addEventListener("click", () => {
 salesHistoryBtn.addEventListener("click", () => {
     searchHistory.style.display = "block";
     dashboard.style.display = "none";
+    paginationControls.style.display = "none";
+    noResults.style.display = "none";
     table.innerHTML = "";
     if (searchHistBox.value.length > 0) {
         searchAllProductsMjs.salesHistoryTableData(searchHistBox.value);
@@ -260,15 +274,15 @@ salesHistoryBtn.addEventListener("click", () => {
 
 // listen for write off button
 writeOffBtn.addEventListener("click", () => {
-    dashboard.style.display = "none";
-    userFormContainer.style.display = "none";
+    paginationControls.style.display = "none";
+    noResults.style.display = "none";
     searchAllProductsMjs.writeOff();
 });
 
 // listen for high value button
 highValueBtn.addEventListener("click", () => {
-    dashboard.style.display = "none";
-    userFormContainer.style.display = "none";
+    paginationControls.style.display = "none";
+    noResults.style.display = "none";
     searchAllProductsMjs.highValueReport();
 });
 
@@ -294,8 +308,8 @@ searchLiveBox.addEventListener("input", (event) => {
 
 // listen for missing availability button
 missingAvailiabilityBtn.addEventListener("click", () => {
-    dashboard.style.display = "none";
-    userFormContainer.style.display = "none";
+    paginationControls.style.display = "none";
+    noResults.style.display = "none";
     searchAllProductsMjs.missingAvailiabilityReport();
 });
 
@@ -306,6 +320,8 @@ userManagementBtn.addEventListener("click", () => {
     searchDiv3.style.display = "none";
     searchDiv2.style.display = "none";
     printBtnDiv.style.display = "none";
+    paginationControls.style.display = "none";
+    noResults.style.display = "none";
     table.innerHTML = "";
     searchAllProductsMjs.userManagement();
 });
@@ -338,6 +354,14 @@ document.querySelector(".table").addEventListener("click", async (e) => {
             alert(err.message);
         }
     }
+});
+
+// listen for pagination buttons
+prevPageBtn.addEventListener("click", () => {
+    searchAllProductsMjs.navigatePage(-1);
+});
+nextPageBtn.addEventListener("click", () => {
+    searchAllProductsMjs.navigatePage(1);
 });
 
 // listen for tab change

@@ -78,24 +78,39 @@ export async function salesHistory(item) {
   return rows;
 }
 
-export async function searchTable() {
-  const [rows] = await pool.query(
-    `SELECT ItemNo, Description, Barcode FROM data`
-  );
+export async function searchTable(page, limit) {
+  const baseQuery = 'SELECT ItemNo, Description, Barcode FROM data';
+  if (page != null && limit != null) {
+    const offset = (page - 1) * limit;
+    const [[{ total }]] = await pool.query('SELECT COUNT(*) as total FROM data');
+    const [rows] = await pool.query(`${baseQuery} LIMIT ? OFFSET ?`, [limit, offset]);
+    return { rows, total };
+  }
+  const [rows] = await pool.query(baseQuery);
   return rows;
 }
 
-export async function writeOff() {
-  const [rows] = await pool.query(
-    "SELECT ItemNo, Description, SUM(Qty) AS QtyPCs, SUM(`Total Price`) AS TotalPrice FROM write_off GROUP BY ItemNo, Description"
-  );
+export async function writeOff(page, limit) {
+  const baseQuery = "SELECT ItemNo, Description, SUM(Qty) AS QtyPCs, SUM(`Total Price`) AS TotalPrice FROM write_off GROUP BY ItemNo, Description";
+  if (page != null && limit != null) {
+    const offset = (page - 1) * limit;
+    const [[{ total }]] = await pool.query(`SELECT COUNT(*) as total FROM (${baseQuery}) AS t`);
+    const [rows] = await pool.query(`${baseQuery} LIMIT ? OFFSET ?`, [limit, offset]);
+    return { rows, total };
+  }
+  const [rows] = await pool.query(baseQuery);
   return rows;
 }
 
-export async function highValue() {
-  const [rows] = await pool.query(
-    `SELECT ms.ItemNo, ms.Description, ms.Qty, ROUND((s.AmountVAT / s.Qty) * ms.Qty, 2) as value FROM main_sheet ms JOIN sales s ON ms.ItemNo = s.ItemNo WHERE ms.Qty > 0 AND ROUND((s.AmountVAT / s.Qty) * ms.Qty, 2) > 500 ORDER BY value DESC`
-  );
+export async function highValue(page, limit) {
+  const baseQuery = 'SELECT ms.ItemNo, ms.Description, ms.Qty, ROUND((s.AmountVAT / s.Qty) * ms.Qty, 2) as value FROM main_sheet ms JOIN sales s ON ms.ItemNo = s.ItemNo WHERE ms.Qty > 0 AND ROUND((s.AmountVAT / s.Qty) * ms.Qty, 2) > 500';
+  if (page != null && limit != null) {
+    const offset = (page - 1) * limit;
+    const [[{ total }]] = await pool.query(`SELECT COUNT(*) as total FROM (${baseQuery}) AS t`);
+    const [rows] = await pool.query(`${baseQuery} ORDER BY value DESC LIMIT ? OFFSET ?`, [limit, offset]);
+    return { rows, total };
+  }
+  const [rows] = await pool.query(`${baseQuery} ORDER BY value DESC`);
   return rows;
 }
 
@@ -130,9 +145,14 @@ export async function deleteUser(id) {
   return result;
 }
 
-export async function missingAvailability() {
-  const [rows] = await pool.query(
-    "SELECT `ac`.ItemNo, `ac`.Description, `ms`.Qty AS stock FROM `active_list` ac JOIN `main_sheet` ms ON `ac`.`ItemNo` = `ms`.`ItemNo` JOIN `pack_size` dd ON `ac`.`ItemNo` = `dd`.`ItemNo` WHERE `ac`.`Mode` = 'DC' AND ac.ItemClass IN ('P-A', 'P-B', 'S', 'G-A') AND ms.Qty < dd.QtyPCs/`dd`.QtyVPE AND ac.ItemCategory NOT IN ('Smoking Needs', 'Frozen Foods') GROUP BY ac.ItemNo, ac.Description, ac.Mode, ac.ItemCategory, ac.Status, ac.ItemClass, dd.QtyPCs/`dd`.QtyVPE, ms.Qty"
-  );
+export async function missingAvailability(page, limit) {
+  const baseQuery = "SELECT `ac`.ItemNo, `ac`.Description, `ms`.Qty AS stock FROM `active_list` ac JOIN `main_sheet` ms ON `ac`.`ItemNo` = `ms`.`ItemNo` JOIN `pack_size` dd ON `ac`.`ItemNo` = `dd`.`ItemNo` WHERE `ac`.`Mode` = 'DC' AND ac.ItemClass IN ('P-A', 'P-B', 'S', 'G-A') AND ms.Qty < dd.QtyPCs/`dd`.QtyVPE AND ac.ItemCategory NOT IN ('Smoking Needs', 'Frozen Foods') GROUP BY ac.ItemNo, ac.Description, ac.Mode, ac.ItemCategory, ac.Status, ac.ItemClass, dd.QtyPCs/`dd`.QtyVPE, ms.Qty";
+  if (page != null && limit != null) {
+    const offset = (page - 1) * limit;
+    const [[{ total }]] = await pool.query(`SELECT COUNT(*) as total FROM (${baseQuery}) AS t`);
+    const [rows] = await pool.query(`${baseQuery} LIMIT ? OFFSET ?`, [limit, offset]);
+    return { rows, total };
+  }
+  const [rows] = await pool.query(baseQuery);
   return rows;
 }

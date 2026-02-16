@@ -1,15 +1,40 @@
 import * as apiCallsMjs from "./apiCalls.mjs";
 import * as indexMjs from "./index.mjs";
 
+// *********** PAGINATION STATE ***********
+let currentPage = 1;
+let currentLimit = 50;
+let currentViewFn = null;
+
+function updatePagination(total, page, limit) {
+  const totalPages = Math.ceil(total / limit);
+  indexMjs.pageInfo.textContent = `Page ${page} of ${totalPages}`;
+  indexMjs.prevPageBtn.disabled = page <= 1;
+  indexMjs.nextPageBtn.disabled = page >= totalPages;
+  indexMjs.paginationControls.style.display = totalPages > 1 ? 'flex' : 'none';
+}
+
+export function navigatePage(delta) {
+  if (currentViewFn) {
+    currentViewFn(currentPage + delta);
+  }
+}
+
 // *********** DATA FUNCTIONS ***********
 // function to be called when search/item history button is clicked
 export const itemHistoryTableData = () => {
   indexMjs.searchHistory.style.display = "block";
   indexMjs.searchDiv3.style.display = "none";
+  indexMjs.paginationControls.style.display = "none";
+  indexMjs.noResults.style.display = "none";
   indexMjs.table.innerHTML = "";
   const theaderRow = ["Item No", "Description", "Qty", "Date"];
   indexMjs.createThead(theaderRow);
   apiCallsMjs.historyData(indexMjs.searchHistBox.value).then((data) => {
+    if (!data || data.length === 0) {
+      indexMjs.noResults.style.display = "block";
+      return;
+    }
     indexMjs.createRows(data.map(item => [
       item.ItemNo,
       item.Description,
@@ -20,10 +45,16 @@ export const itemHistoryTableData = () => {
 };
 // function to be called when search/wh deliveries button is clicked
 export const whDeliveriesTableData = () => {
+  indexMjs.paginationControls.style.display = "none";
+  indexMjs.noResults.style.display = "none";
   indexMjs.table.innerHTML = "";
   const theaderRow = ["Item No", "Description", "Qty", "Date"];
   indexMjs.createThead(theaderRow);
   apiCallsMjs.deliveryData(indexMjs.searchHistBox.value).then((data) => {
+    if (!data || data.length === 0) {
+      indexMjs.noResults.style.display = "block";
+      return;
+    }
     indexMjs.createRows(data.map(item => [
       item.ItemNo,
       item.Description,
@@ -32,12 +63,18 @@ export const whDeliveriesTableData = () => {
     ]));
   });
 };
-// function to be called when search/wh deliveries button is clicked
+// function to be called when search/dsd deliveries button is clicked
 export const dsdDeliveriesTableData = () => {
+  indexMjs.paginationControls.style.display = "none";
+  indexMjs.noResults.style.display = "none";
   indexMjs.table.innerHTML = "";
   const theaderRow = ["Item No", "Description", "Qty", "Date"];
   indexMjs.createThead(theaderRow);
   apiCallsMjs.dsdDelivery(indexMjs.searchHistBox.value).then((data) => {
+    if (!data || data.length === 0) {
+      indexMjs.noResults.style.display = "block";
+      return;
+    }
     indexMjs.createRows(data.map(item => [
       item.ItemNo,
       item.Description,
@@ -48,10 +85,16 @@ export const dsdDeliveriesTableData = () => {
 };
 // function to be called when search/sales history button is clicked
 export const salesHistoryTableData = () => {
+  indexMjs.paginationControls.style.display = "none";
+  indexMjs.noResults.style.display = "none";
   indexMjs.table.innerHTML = "";
   const theaderRow = ["Item No", "Description", "Qty", "Date"];
   indexMjs.createThead(theaderRow);
   apiCallsMjs.salesHistory(indexMjs.searchHistBox.value).then((data) => {
+    if (!data || data.length === 0) {
+      indexMjs.noResults.style.display = "block";
+      return;
+    }
     indexMjs.createRows(data.map(item => [
       item.ItemNo,
       item.Description,
@@ -61,19 +104,34 @@ export const salesHistoryTableData = () => {
   });
 };
 // function to be called when all products button is clicked
-export const searchAllProducts = () => {
+export const searchAllProducts = (page = 1) => {
+  currentPage = page;
+  currentViewFn = searchAllProducts;
   indexMjs.searchHistory.style.display = "none";
   indexMjs.searchDiv3.style.display = "block";
+  indexMjs.searchDiv2.style.display = "none";
+  indexMjs.printBtnDiv.style.display = "none";
+  indexMjs.dashboard.style.display = "none";
+  indexMjs.userFormContainer.style.display = "none";
+  indexMjs.noResults.style.display = "none";
   indexMjs.table.innerHTML = "";
   const theaderRow = ["Item No", "Description", "Barcode"];
   indexMjs.createThead(theaderRow);
-  apiCallsMjs.loadData(indexMjs.searchName.value).then((data) => {
-    indexMjs.createRows(data.map(item => [item.ItemNo, item.Description, item.Barcode]));
+  apiCallsMjs.loadData(page, currentLimit).then((result) => {
+    if (!result.data || result.data.length === 0) {
+      indexMjs.noResults.style.display = "block";
+      indexMjs.paginationControls.style.display = "none";
+      return;
+    }
+    indexMjs.createRows(result.data.map(item => [item.ItemNo, item.Description, item.Barcode]));
+    updatePagination(result.total, result.page, result.limit);
   });
 };
 
 // function to be called when dashboard button is clicked
 export const dashBoard = () => {
+  indexMjs.paginationControls.style.display = "none";
+  indexMjs.noResults.style.display = "none";
   indexMjs.dashboard.style.display = "block";
   indexMjs.salesDiv.innerHTML = "";
   indexMjs.wastageDiv.innerHTML = "";
@@ -118,9 +176,15 @@ export const dashBoard = () => {
 };
 
 // function to be called when write off button is clicked
-export const writeOff = () => {
+export const writeOff = (page = 1) => {
+  currentPage = page;
+  currentViewFn = writeOff;
   indexMjs.searchHistory.style.display = "none";
   indexMjs.searchDiv3.style.display = "block";
+  indexMjs.searchDiv2.style.display = "none";
+  indexMjs.dashboard.style.display = "none";
+  indexMjs.userFormContainer.style.display = "none";
+  indexMjs.noResults.style.display = "none";
   indexMjs.printBtnDiv.style.display = "flex";
   indexMjs.printBtnDiv.innerHTML = `
     <div class="print-btn-container">
@@ -133,19 +197,31 @@ export const writeOff = () => {
   indexMjs.table.innerHTML = "";
   const theaderRow = ["Item No", "Description", "Qty", "Totals"];
   indexMjs.createThead(theaderRow);
-  apiCallsMjs.loadWriteOff().then((data) => {
-    indexMjs.createRows(data.map(item => [
+  apiCallsMjs.loadWriteOff(page, currentLimit).then((result) => {
+    if (!result.data || result.data.length === 0) {
+      indexMjs.noResults.style.display = "block";
+      indexMjs.paginationControls.style.display = "none";
+      return;
+    }
+    indexMjs.createRows(result.data.map(item => [
       item.ItemNo,
       item.Description,
       item.QtyPCs,
       item.TotalPrice,
     ]));
+    updatePagination(result.total, result.page, result.limit);
   });
 };
 // function to be called when high value button is clicked
-export const highValueReport = () => {
+export const highValueReport = (page = 1) => {
+  currentPage = page;
+  currentViewFn = highValueReport;
   indexMjs.searchHistory.style.display = "none";
   indexMjs.searchDiv3.style.display = "block";
+  indexMjs.searchDiv2.style.display = "none";
+  indexMjs.dashboard.style.display = "none";
+  indexMjs.userFormContainer.style.display = "none";
+  indexMjs.noResults.style.display = "none";
   indexMjs.printBtnDiv.style.display = "flex";
   indexMjs.printBtnDiv.innerHTML = `
         <div class="print-btn-container">
@@ -159,17 +235,22 @@ export const highValueReport = () => {
   indexMjs.table.innerHTML = "";
   const theaderRow = ["Item No", "Description", "Qty", "Value"];
   indexMjs.createThead(theaderRow);
-  apiCallsMjs.loadHighValue().then((data) => {
-    indexMjs.createRows(data.map(item => [
+  apiCallsMjs.loadHighValue(page, currentLimit).then((result) => {
+    if (!result.data || result.data.length === 0) {
+      indexMjs.noResults.style.display = "block";
+      indexMjs.paginationControls.style.display = "none";
+      return;
+    }
+    indexMjs.createRows(result.data.map(item => [
       item.ItemNo,
       item.Description,
       item.Qty,
       item.value,
     ]));
+    updatePagination(result.total, result.page, result.limit);
   });
 };
 
-// function to be called when missing availability button is clicked
 // function to be called when user management button is clicked
 export const userManagement = () => {
   indexMjs.searchHistory.style.display = "none";
@@ -177,11 +258,17 @@ export const userManagement = () => {
   indexMjs.searchDiv2.style.display = "none";
   indexMjs.printBtnDiv.style.display = "none";
   indexMjs.dashboard.style.display = "none";
+  indexMjs.paginationControls.style.display = "none";
+  indexMjs.noResults.style.display = "none";
   indexMjs.userFormContainer.style.display = "block";
   indexMjs.table.innerHTML = "";
   const theaderRow = ["Username", "Store ID", "Admin", "Created", "Actions"];
   indexMjs.createThead(theaderRow);
   apiCallsMjs.loadUsers().then((data) => {
+    if (!data || data.length === 0) {
+      indexMjs.noResults.style.display = "block";
+      return;
+    }
     let tbody = indexMjs.table.querySelector("tbody");
     if (!tbody) {
       tbody = document.createElement("tbody");
@@ -221,9 +308,16 @@ export const userManagement = () => {
   });
 };
 
-export const missingAvailiabilityReport = () => {
+// function to be called when missing availability button is clicked
+export const missingAvailiabilityReport = (page = 1) => {
+  currentPage = page;
+  currentViewFn = missingAvailiabilityReport;
   indexMjs.searchHistory.style.display = "none";
   indexMjs.searchDiv3.style.display = "block";
+  indexMjs.searchDiv2.style.display = "none";
+  indexMjs.dashboard.style.display = "none";
+  indexMjs.userFormContainer.style.display = "none";
+  indexMjs.noResults.style.display = "none";
   indexMjs.printBtnDiv.style.display = "flex";
   indexMjs.printBtnDiv.innerHTML = `
     <div class="print-btn-container">
@@ -236,7 +330,13 @@ export const missingAvailiabilityReport = () => {
   indexMjs.table.innerHTML = "";
   const theaderRow = ["Item No", "Description", "Stock"];
   indexMjs.createThead(theaderRow);
-  apiCallsMjs.loadMissingAvailability().then((data) => {
-    indexMjs.createRows(data.map(item => [item.ItemNo, item.Description, item.stock]));
+  apiCallsMjs.loadMissingAvailability(page, currentLimit).then((result) => {
+    if (!result.data || result.data.length === 0) {
+      indexMjs.noResults.style.display = "block";
+      indexMjs.paginationControls.style.display = "none";
+      return;
+    }
+    indexMjs.createRows(result.data.map(item => [item.ItemNo, item.Description, item.stock]));
+    updatePagination(result.total, result.page, result.limit);
   });
 };

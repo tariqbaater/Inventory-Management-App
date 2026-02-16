@@ -435,6 +435,49 @@ body {
   border: 1px solid #000;
 }
 
+/* Pagination controls */
+#pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  padding: 10px;
+}
+
+.pagination-btn {
+  padding: 5px 15px;
+  border-radius: 5px;
+  background-color: #e85526;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  color: white;
+  font-size: 13px;
+  cursor: pointer;
+  border: none;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background-color: #007460;
+  border: 1px solid #000;
+}
+
+.pagination-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+#page-info {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+}
+
+#no-results {
+  text-align: center;
+  padding: 40px 20px;
+  color: #888;
+  font-size: 16px;
+}
+
 h2 {
   color: #000;
   text-align: left;

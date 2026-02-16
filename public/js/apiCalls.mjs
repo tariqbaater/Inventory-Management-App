@@ -92,8 +92,34 @@ export const dsdDelivery = (id) => fetchData('dsd_deliveries', `?id=${id}`);
 // Read sales history data from db api
 export const salesHistory = (id) => fetchData('sales_history', `?id=${id}`);
 
-// Read search data from db api
-export const loadData = () => fetchData('search_products');
+// Generic paginated fetch — returns { data, total, page, limit }
+const fetchPaginated = async (endpoint, page = 1, limit = 50) => {
+  showLoader();
+  try {
+    const response = await fetch(`${BASE_URL}/${endpoint}?page=${page}&limit=${limit}`, {
+      credentials: 'include',
+    });
+    if (response.status === 401) {
+      window.dispatchEvent(new CustomEvent('auth:required'));
+      throw new Error('Authentication required');
+    }
+    if (!response.ok) {
+      showError(`API Error: ${response.status} ${response.statusText}`);
+      throw new Error(`API Error: ${response.status} ${response.statusText}`);
+    }
+    return await response.json();
+  } catch (err) {
+    if (err.message !== 'Authentication required') {
+      showError(err.message || 'Unknown error');
+    }
+    throw err;
+  } finally {
+    hideLoader();
+  }
+};
+
+// Read search data from db api (paginated)
+export const loadData = (page = 1, limit = 50) => fetchPaginated('search_products', page, limit);
 
 // Read top products data from db api
 export const loadKvi = () => fetchData('kvi').then(data => data[0]);
@@ -101,14 +127,14 @@ export const loadKvi = () => fetchData('kvi').then(data => data[0]);
 // Read total sales data from db api
 export const loadWastePercentage = () => fetchData('waste_percentage').then(data => data[0]);
 
-// Read write-off data from db api
-export const loadWriteOff = () => fetchData('write_off');
+// Read write-off data from db api (paginated)
+export const loadWriteOff = (page = 1, limit = 50) => fetchPaginated('write_off', page, limit);
 
-// Read high value data from db api
-export const loadHighValue = () => fetchData('high_value');
+// Read high value data from db api (paginated)
+export const loadHighValue = (page = 1, limit = 50) => fetchPaginated('high_value', page, limit);
 
-// Read missing availability data from db api
-export const loadMissingAvailability = () => fetchData('missing_availability');
+// Read missing availability data from db api (paginated)
+export const loadMissingAvailability = (page = 1, limit = 50) => fetchPaginated('missing_availability', page, limit);
 
 // --- User management API functions ---
 export const fetchCurrentUser = async () => {

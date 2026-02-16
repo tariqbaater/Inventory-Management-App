@@ -22,6 +22,14 @@ import {
 
 const router = express.Router();
 
+function parsePagination(query) {
+  if (query.page == null && query.limit == null) return null;
+  const page = parseInt(query.page, 10);
+  const limit = parseInt(query.limit, 10);
+  if (isNaN(page) || isNaN(limit) || page < 1 || limit < 1) return false;
+  return { page, limit };
+}
+
 // --- Auth routes (no session required) ---
 
 router.post(
@@ -122,6 +130,12 @@ router.get("/sales_history", [query('id').isInt().withMessage('id must be an int
 
 router.get("/search_products", async (req, res, next) => {
   try {
+    const pagination = parsePagination(req.query);
+    if (pagination === false) return res.status(400).json({ error: 'page and limit must be positive integers' });
+    if (pagination) {
+      const result = await searchTable(pagination.page, pagination.limit);
+      return res.json({ data: result.rows, total: result.total, page: pagination.page, limit: pagination.limit });
+    }
     const data = await searchTable();
     res.json({ data });
   } catch (err) { next(err); }
@@ -129,6 +143,12 @@ router.get("/search_products", async (req, res, next) => {
 
 router.get("/write_off", async (req, res, next) => {
   try {
+    const pagination = parsePagination(req.query);
+    if (pagination === false) return res.status(400).json({ error: 'page and limit must be positive integers' });
+    if (pagination) {
+      const result = await writeOff(pagination.page, pagination.limit);
+      return res.json({ data: result.rows, total: result.total, page: pagination.page, limit: pagination.limit });
+    }
     const data = await writeOff();
     res.json({ data });
   } catch (err) { next(err); }
@@ -136,6 +156,12 @@ router.get("/write_off", async (req, res, next) => {
 
 router.get("/high_value", async (req, res, next) => {
   try {
+    const pagination = parsePagination(req.query);
+    if (pagination === false) return res.status(400).json({ error: 'page and limit must be positive integers' });
+    if (pagination) {
+      const result = await highValue(pagination.page, pagination.limit);
+      return res.json({ data: result.rows, total: result.total, page: pagination.page, limit: pagination.limit });
+    }
     const data = await highValue();
     res.json({ data });
   } catch (err) { next(err); }
@@ -143,6 +169,12 @@ router.get("/high_value", async (req, res, next) => {
 
 router.get("/missing_availability", async (req, res, next) => {
   try {
+    const pagination = parsePagination(req.query);
+    if (pagination === false) return res.status(400).json({ error: 'page and limit must be positive integers' });
+    if (pagination) {
+      const result = await missingAvailability(pagination.page, pagination.limit);
+      return res.json({ data: result.rows, total: result.total, page: pagination.page, limit: pagination.limit });
+    }
     const data = await missingAvailability();
     res.json({ data });
   } catch (err) { next(err); }
