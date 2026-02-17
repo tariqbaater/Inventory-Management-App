@@ -11,5 +11,5 @@ jobs:
     steps:
       - name: Trigger Dokploy Deployment
         run: |
-          curl -X POST "https://admin.tariqbaater.com/api/deploy/uMHEdXyOn3h9g2AW-DTrJ" \
+          curl -X POST "http://127.0.0.1:3000/api/deploy/uMHEdXyOn3h9g2AW-DTrJ" \
             -H "Content-Type: application/json"
