@@ -12,4 +12,6 @@ jobs:
       - name: Trigger Dokploy Deployment
         run: |
           curl -X POST "http://127.0.0.1:3000/api/deploy/uMHEdXyOn3h9g2AW-DTrJ" \
-            -H "Content-Type: application/json"
+            -H "Content-Type: application/json" \
+            -H "X-GitHub-Event: push" \
+            -d '{"ref":"refs/heads/main","repository":{"full_name":"tariqbaater/Inventory-Management-App"}}'
