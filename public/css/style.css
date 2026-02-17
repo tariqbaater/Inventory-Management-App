@@ -385,7 +385,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   padding: 10px;
 }
 
@@ -615,6 +615,7 @@ table {
 
   .search-bar {
     flex-direction: column;
+    gap: 10px;
   }
 
   .search-bar #search-history {

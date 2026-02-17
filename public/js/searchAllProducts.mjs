@@ -215,8 +215,8 @@ export const writeOff = (page = 1, search = '') => {
     indexMjs.createRows(result.data.map(item => [
       item.ItemNo,
       item.Description,
-      item.QtyPCs,
-      item.TotalPrice,
+      Number(item.QtyPCs).toFixed(2),
+      Number(item.TotalPrice).toFixed(2),
     ]));
     updatePagination(result.total, result.page, result.limit);
   });
