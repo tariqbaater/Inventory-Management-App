@@ -10,21 +10,22 @@ body {
    ########################*/
 
 #modal {
-  background-color: #007460;
+  background-color: #1a56db;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 350px;
-  height: 350px;
-  padding: 20px 20px;
+  max-width: 90vw;
+  padding: 30px 20px;
   border-radius: 10px;
   font-size: 1.5rem;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   animation-name: animatemodal;
   animation-duration: 0.4s;
+  box-sizing: border-box;
 }
 
 #modal:hover {
@@ -48,50 +49,50 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
-  margin: 10px 10px;
-  padding: 10px 10px;
+  align-items: stretch;
+  margin: 0;
+  padding: 0;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .label {
-  font-size: 1.5rem;
-  padding: 10px 10px;
-  margin: 10px 10px;
+  font-size: 1rem;
+  padding: 0;
+  margin: 0 0 6px 0;
   color: #fff;
 }
 
 #username,
 #password {
-  width: 80%;
-  height: 30px;
-  padding: 10px 10px;
-  font-size: 1.5rem;
-  /* background: transparent; */
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 1rem;
   color: #000;
   border: 2px solid #fff;
-  border-radius: 10px;
-  box-shadow: 0 0 3px black;
+  border-radius: 8px;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+  margin-bottom: 12px;
 }
 
 #login-button {
-  width: 50%;
-  height: 50px;
-  margin-top: 30px;
-  padding: 10px 10px;
-  font-size: 1.5rem;
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px;
+  font-size: 1rem;
   background: transparent;
   color: #fff;
   border: 2px solid #fff;
-  border-radius: 10px;
-  padding: 5px;
-  box-shadow: 0 0 3px black;
-  transition: 0.5s;
+  border-radius: 8px;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
   cursor: pointer;
+  box-sizing: border-box;
 }
 
 #login-button:hover {
-  background: #e85526;
+  background: #60a5fa;
   color: #fff;
 }
 
@@ -116,7 +117,7 @@ body {
 .spinner {
   width: 60px;
   height: 60px;
-  border: 5px solid #007460;
+  border: 5px solid #1a56db;
   border-top-color: transparent;
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -128,7 +129,7 @@ body {
   left: 6px;
   width: 38px;
   height: 38px;
-  border: 5px solid #e85526;
+  border: 5px solid #60a5fa;
   border-bottom-color: transparent;
   border-radius: 50%;
   animation: spin 0.6s linear infinite reverse;
@@ -143,11 +144,12 @@ body {
 }
 
 .logo {
-  width: 150px;
+  width: 50px;
+  border-radius: 8px;
 }
 
 .navbar {
-  background-color: #007460;
+  background-color: #1a56db;
   padding: 10px;
   border-radius: 5px;
   color: white;
@@ -182,7 +184,7 @@ body {
 #logout-button {
   border-radius: 5px;
   padding: 8px 14px;
-  background-color: #e85526;
+  background-color: #60a5fa;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   color: white;
   font-size: 12px;
@@ -192,9 +194,8 @@ body {
 }
 
 #logout-button:hover {
-  background-color: red;
-  border: 1px solid #000;
-  font-weight: bold;
+  background-color: #1a56db;
+  border: 1px solid #fff;
 }
 
 .navbar-list {
@@ -208,7 +209,7 @@ body {
 .navbar-button {
   padding: 10px;
   border-radius: 5px;
-  background-color: #e85526;
+  background-color: #60a5fa;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   color: white;
   font-size: 15px;
@@ -218,8 +219,8 @@ body {
 }
 
 .navbar-button:hover {
-  background-color: #007460;
-  border: 1px solid #000;
+  background-color: #1248b5;
+  border: 1px solid #fff;
 }
 
 /* User management form */
@@ -255,7 +256,7 @@ body {
 .delete-btn {
   padding: 5px 10px;
   border-radius: 4px;
-  background-color: #e85526;
+  background-color: #60a5fa;
   color: white;
   border: none;
   cursor: pointer;
@@ -263,7 +264,7 @@ body {
 }
 
 .delete-btn:hover {
-  background-color: red;
+  background-color: #dc2626;
 }
 
 /* dashboard */
@@ -315,37 +316,37 @@ body {
 }
 
 .card:first-child {
-  background-color: #007460;
+  background-color: #1a56db;
   color: #fff;
   animation: card-loader 1s ease-in-out 1;
 }
 
 .card:nth-child(2) {
-  background-color: #e85526;
+  background-color: #60a5fa;
   color: #fff;
   animation: card-loader 1.5s ease-in-out 1;
 }
 
 .card:nth-child(3) {
-  background-color: #007460;
+  background-color: #1a56db;
   color: #fff;
   animation: card-loader 2s ease-in-out 1;
 }
 
 .card:nth-child(4) {
-  background-color: #e85526;
+  background-color: #60a5fa;
   color: #fff;
   animation: card-loader 2.5s ease-in-out 1;
 }
 
 .card:nth-child(5) {
-  background-color: #007460;
+  background-color: #1a56db;
   color: #fff;
   animation: card-loader 3s ease-in-out 1;
 }
 
 .card:nth-child(6) {
-  background-color: #e85526;
+  background-color: #60a5fa;
   color: #fff;
   animation: card-loader 3.5s ease-in-out 1;
 }
@@ -398,7 +399,7 @@ body {
   width: 150px;
   padding: 10px;
   border-radius: 5px;
-  background-color: #e85526;
+  background-color: #60a5fa;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   color: white;
   font-size: 15px;
@@ -409,7 +410,7 @@ body {
   width: 150px;
   padding: 10px;
   border-radius: 5px;
-  background-color: #e85526;
+  background-color: #60a5fa;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   color: white;
   font-size: 15px;
@@ -417,13 +418,13 @@ body {
 }
 
 .search-button:hover {
-  background-color: #007460;
-  border: 1px solid #000;
+  background-color: #1248b5;
+  border: 1px solid #fff;
 }
 
 .search-button2:hover {
-  background-color: #007460;
-  border: 1px solid #000;
+  background-color: #1248b5;
+  border: 1px solid #fff;
 }
 
 .print-btn-container {
@@ -437,7 +438,7 @@ body {
   width: 100px;
   padding: 5px;
   border-radius: 5px;
-  background-color: #e85526;
+  background-color: #60a5fa;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   color: white;
   font-size: 13px;
@@ -445,8 +446,8 @@ body {
 }
 
 .print-btn:hover {
-  background-color: #007460;
-  border: 1px solid #000;
+  background-color: #1248b5;
+  border: 1px solid #fff;
 }
 
 /* Pagination controls */
@@ -461,7 +462,7 @@ body {
 .pagination-btn {
   padding: 5px 15px;
   border-radius: 5px;
-  background-color: #e85526;
+  background-color: #60a5fa;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   color: white;
   font-size: 13px;
@@ -470,8 +471,8 @@ body {
 }
 
 .pagination-btn:hover:not(:disabled) {
-  background-color: #007460;
-  border: 1px solid #000;
+  background-color: #1248b5;
+  border: 1px solid #fff;
 }
 
 .pagination-btn:disabled {
@@ -508,7 +509,7 @@ tr:nth-of-type(even) td {
 }
 
 tr:last-of-type td {
-  border-bottom: 2px solid #007460;
+  border-bottom: 2px solid #1a56db;
 }
 
 th {
@@ -516,7 +517,7 @@ th {
   border-radius: 5px;
   border-collapse: collapse;
   color: #fff;
-  background-color: #007460;
+  background-color: #1a56db;
   padding: 5px;
   font-weight: 700;
   font-size: 18px;
@@ -630,7 +631,7 @@ table {
   }
 
   .logo {
-    width: 100px;
+    width: 40px;
   }
 
   .navbar-button {
