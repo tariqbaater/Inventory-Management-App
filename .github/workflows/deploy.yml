@@ -7,17 +7,9 @@ on:
 
 jobs:
   deploy:
-    runs-on: self-hosted
-
+    runs-on: ubuntu-latest
     steps:
-      - name: Pull latest code inside container
+      - name: Trigger Dokploy Deployment
         run: |
-          docker exec inventory-management-dukan-vhhgqi.1.b07vbwnoefjcpig0mumekatc0 git pull origin main
-
-      - name: Install dependencies (if needed)
-        run: |
-          docker exec inventory-management-dukan-vhhgqi.1.b07vbwnoefjcpig0mumekatc0 npm install
-
-      - name: Restart app process
-        run: |
-          docker restart inventory-management-dukan-vhhgqi.1.b07vbwnoefjcpig0mumekatc0
+          curl -X POST "https://admin.tariqbaater.com/api/deploy/uMHEdXyOn3h9g2AW-DTrJ" \
+            -H "Content-Type: application/json"
