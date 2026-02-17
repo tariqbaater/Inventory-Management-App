@@ -104,11 +104,15 @@
     <!-- navigation bar -->
     <div class="navbar">
       <nav>
-        <a href="./index.html"
-          ><img class="logo" src="./img/logo.svg" alt="Dukan Logo"
-        /></a>
-        <div class="navbar-inline">
+        <div class="navbar-top">
+          <a href="./index.html"
+            ><img class="logo" src="./img/logo.svg" alt="Dukan Logo"
+          /></a>
           <h1 class="navbar-title">Dukan Inventory Management</h1>
+          <div class="navbar-user">
+            <span id="user-info"></span>
+            <button id="logout-button">Logout</button>
+          </div>
         </div>
         <div class="navbar-list">
           <button class="navbar-button" type="button" id="dashboard">
@@ -137,8 +141,6 @@
           >
             Users
           </button>
-          <span id="user-info"></span>
-          <button id="logout-button">Logout</button>
         </div>
       </nav>
     </div>
