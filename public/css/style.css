@@ -608,11 +608,17 @@ table {
   }
 
   .navbar-button {
-    width: auto;
-    flex: 1 1 auto;
-    min-width: 120px;
+    width: 100%;
     text-align: center;
-    font-size: 13px;
+    font-size: 14px;
+  }
+
+  .search-bar {
+    flex-direction: column;
+  }
+
+  .search-bar #search-history {
+    width: 100%;
   }
 }
 
@@ -627,13 +633,8 @@ table {
   }
 
   .navbar-button {
-    min-width: 100px;
-    font-size: 12px;
-    padding: 8px;
-  }
-
-  #search-history {
-    width: 100%;
+    font-size: 13px;
+    padding: 10px;
   }
 
   .print-btn {
