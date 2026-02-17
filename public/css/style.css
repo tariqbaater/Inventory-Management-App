@@ -10,7 +10,7 @@ body {
    ########################*/
 
 #modal {
-  background-color: #1a56db;
+  background-color: #60a5fa;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -92,7 +92,7 @@ body {
 }
 
 #login-button:hover {
-  background: #60a5fa;
+  background: #1a56db;
   color: #fff;
 }
 
@@ -117,7 +117,7 @@ body {
 .spinner {
   width: 60px;
   height: 60px;
-  border: 5px solid #1a56db;
+  border: 5px solid #60a5fa;
   border-top-color: transparent;
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -129,7 +129,7 @@ body {
   left: 6px;
   width: 38px;
   height: 38px;
-  border: 5px solid #60a5fa;
+  border: 5px solid #1a56db;
   border-bottom-color: transparent;
   border-radius: 50%;
   animation: spin 0.6s linear infinite reverse;
@@ -146,10 +146,11 @@ body {
 .logo {
   width: 50px;
   border-radius: 8px;
+  filter: brightness(0) invert(1);
 }
 
 .navbar {
-  background-color: #1a56db;
+  background-color: #60a5fa;
   padding: 10px;
   border-radius: 5px;
   color: white;
@@ -184,7 +185,7 @@ body {
 #logout-button {
   border-radius: 5px;
   padding: 8px 14px;
-  background-color: #60a5fa;
+  background-color: #1a56db;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   color: white;
   font-size: 12px;
@@ -194,7 +195,7 @@ body {
 }
 
 #logout-button:hover {
-  background-color: #1a56db;
+  background-color: #60a5fa;
   border: 1px solid #fff;
 }
 
@@ -209,7 +210,7 @@ body {
 .navbar-button {
   padding: 10px;
   border-radius: 5px;
-  background-color: #60a5fa;
+  background-color: #1a56db;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   color: white;
   font-size: 15px;
@@ -219,7 +220,7 @@ body {
 }
 
 .navbar-button:hover {
-  background-color: #1248b5;
+  background-color: #3b82f6;
   border: 1px solid #fff;
 }
 
@@ -256,7 +257,7 @@ body {
 .delete-btn {
   padding: 5px 10px;
   border-radius: 4px;
-  background-color: #60a5fa;
+  background-color: #1a56db;
   color: white;
   border: none;
   cursor: pointer;
@@ -316,37 +317,37 @@ body {
 }
 
 .card:first-child {
-  background-color: #1a56db;
+  background-color: #60a5fa;
   color: #fff;
   animation: card-loader 1s ease-in-out 1;
 }
 
 .card:nth-child(2) {
-  background-color: #60a5fa;
+  background-color: #1a56db;
   color: #fff;
   animation: card-loader 1.5s ease-in-out 1;
 }
 
 .card:nth-child(3) {
-  background-color: #1a56db;
+  background-color: #60a5fa;
   color: #fff;
   animation: card-loader 2s ease-in-out 1;
 }
 
 .card:nth-child(4) {
-  background-color: #60a5fa;
+  background-color: #1a56db;
   color: #fff;
   animation: card-loader 2.5s ease-in-out 1;
 }
 
 .card:nth-child(5) {
-  background-color: #1a56db;
+  background-color: #60a5fa;
   color: #fff;
   animation: card-loader 3s ease-in-out 1;
 }
 
 .card:nth-child(6) {
-  background-color: #60a5fa;
+  background-color: #1a56db;
   color: #fff;
   animation: card-loader 3.5s ease-in-out 1;
 }
@@ -399,7 +400,7 @@ body {
   width: 150px;
   padding: 10px;
   border-radius: 5px;
-  background-color: #60a5fa;
+  background-color: #1a56db;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   color: white;
   font-size: 15px;
@@ -410,7 +411,7 @@ body {
   width: 150px;
   padding: 10px;
   border-radius: 5px;
-  background-color: #60a5fa;
+  background-color: #1a56db;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   color: white;
   font-size: 15px;
@@ -418,12 +419,12 @@ body {
 }
 
 .search-button:hover {
-  background-color: #1248b5;
+  background-color: #3b82f6;
   border: 1px solid #fff;
 }
 
 .search-button2:hover {
-  background-color: #1248b5;
+  background-color: #3b82f6;
   border: 1px solid #fff;
 }
 
@@ -438,7 +439,7 @@ body {
   width: 100px;
   padding: 5px;
   border-radius: 5px;
-  background-color: #60a5fa;
+  background-color: #1a56db;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   color: white;
   font-size: 13px;
@@ -446,7 +447,7 @@ body {
 }
 
 .print-btn:hover {
-  background-color: #1248b5;
+  background-color: #3b82f6;
   border: 1px solid #fff;
 }
 
@@ -462,7 +463,7 @@ body {
 .pagination-btn {
   padding: 5px 15px;
   border-radius: 5px;
-  background-color: #60a5fa;
+  background-color: #1a56db;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   color: white;
   font-size: 13px;
@@ -471,7 +472,7 @@ body {
 }
 
 .pagination-btn:hover:not(:disabled) {
-  background-color: #1248b5;
+  background-color: #3b82f6;
   border: 1px solid #fff;
 }
 
@@ -509,7 +510,7 @@ tr:nth-of-type(even) td {
 }
 
 tr:last-of-type td {
-  border-bottom: 2px solid #1a56db;
+  border-bottom: 2px solid #60a5fa;
 }
 
 th {
@@ -517,7 +518,7 @@ th {
   border-radius: 5px;
   border-collapse: collapse;
   color: #fff;
-  background-color: #1a56db;
+  background-color: #60a5fa;
   padding: 5px;
   font-weight: 700;
   font-size: 18px;
