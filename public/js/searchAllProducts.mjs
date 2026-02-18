@@ -35,7 +35,7 @@ export const itemHistoryTableData = () => {
   indexMjs.paginationControls.style.display = "none";
   indexMjs.noResults.style.display = "none";
   indexMjs.table.innerHTML = "";
-  const theaderRow = ["Item No", "Description", "Qty", "Date"];
+  const theaderRow = ["Item No", "Description", "Qty", "Remarks"];
   indexMjs.createThead(theaderRow);
   apiCallsMjs.historyData(indexMjs.searchHistBox.value).then((data) => {
     if (!data || data.length === 0) {
@@ -45,8 +45,8 @@ export const itemHistoryTableData = () => {
     indexMjs.createRows(data.map(item => [
       item.ItemNo,
       item.Description,
-      item.QtyPCs,
-      item.Date ? item.Date.substring(0, 10) : '',
+      Number(item.QtyPCs).toFixed(2),
+      item.Remarks,
     ]));
   });
 };

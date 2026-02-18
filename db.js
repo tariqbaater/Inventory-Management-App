@@ -40,16 +40,40 @@ export async function wastePercentage() {
 
 export async function readData(item) {
   const [rows] = await pool.query(
-    `SELECT d.ItemNo, d.Description, dd.QtyPCs, dd.Date
-     FROM data d
-     JOIN dry_delivey dd ON d.ItemNo = dd.ItemNo
-     WHERE d.ItemNo = ?
+    `SELECT ItemNo, Description, SUM(QtyPCs) AS QtyPCs, 'WH' AS Remarks, 3 AS priority
+     FROM dry_delivey WHERE ItemNo = ? GROUP BY ItemNo, Description
      UNION ALL
-     SELECT d.ItemNo, d.Description, dr.Qty AS QtyPCs, dr.Date
-     FROM data d
-     JOIN dsd_receiving dr ON d.ItemNo = dr.ItemNo
-     WHERE d.ItemNo = ?`,
-    [item, item]
+     SELECT ItemNo, Description, SUM(Qty) AS QtyPCs, 'DSD' AS Remarks, 4 AS priority
+     FROM dsd_receiving WHERE ItemNo = ? GROUP BY ItemNo, Description
+     UNION ALL
+     SELECT ItemNo, Description, (Qty * -1) AS QtyPCs, 'SALES' AS Remarks, 11 AS priority
+     FROM sales WHERE ItemNo = ? GROUP BY ItemNo, Description
+     UNION ALL
+     SELECT itemno, description, ROUND(SUM(qty * -1), 2) AS QtyPCs, 'WASTE' AS Remarks, 10 AS priority
+     FROM write_off WHERE ItemNo = ? GROUP BY itemno, description
+     UNION ALL
+     SELECT itemno, description, Qty AS QtyPCs, 'STOCK' AS Remarks, 1 AS priority
+     FROM main_sheet WHERE ItemNo = ? GROUP BY itemno, description
+     UNION ALL
+     SELECT itemno, description, opening AS QtyPCs, 'OPENING' AS Remarks, 2 AS priority
+     FROM opening WHERE ItemNo = ? GROUP BY itemno, description
+     UNION ALL
+     SELECT itemno, description, SUM(qty * -1) AS QtyPCs, 'IST OUT' AS Remarks, 9 AS priority
+     FROM inter_store WHERE ItemNo = ? GROUP BY itemno, description
+     UNION ALL
+     SELECT itemno, description, ROUND(SUM(quantity * -1), 2) AS QtyPCs, 'RTW' AS Remarks, 8 AS priority
+     FROM rtw WHERE ItemNo = ? GROUP BY itemno, description
+     UNION ALL
+     SELECT itemno, description, ROUND(SUM(qty * -1), 2) AS QtyPCs, 'SHORT' AS Remarks, 7 AS priority
+     FROM short_claim WHERE ItemNo = ? GROUP BY itemno, description
+     UNION ALL
+     SELECT itemno, description, qty AS QtyPCs, 'OVER' AS Remarks, 5 AS priority
+     FROM over_claim WHERE ItemNo = ? GROUP BY itemno, description
+     UNION ALL
+     SELECT itemno, description, SUM(qty * -1) AS QtyPCs, 'RTV' AS Remarks, 6 AS priority
+     FROM dsd_return WHERE ItemNo = ? GROUP BY itemno, description
+     ORDER BY priority`,
+    [item, item, item, item, item, item, item, item, item, item, item]
   );
   return rows;
 }
