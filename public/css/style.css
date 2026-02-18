@@ -364,13 +364,14 @@ body {
   transition: 0.3s;
 }
 
-/* TODO: need to change the styling of search bar and search button using ids */
 #search-history {
-  width: 24%;
-  padding: 12px;
+  width: 150px;
+  padding: 10px;
   border-radius: 5px;
   background-color: #fff;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  font-size: 15px;
+  box-sizing: border-box;
 }
 
 .search-live {
@@ -387,8 +388,8 @@ body {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
-  padding: 10px;
+  gap: 6px;
+  padding: 8px 10px;
 }
 
 .search-bar2 {
