@@ -46,16 +46,16 @@ export async function readData(item) {
      SELECT ItemNo, Description, SUM(Qty) AS QtyPCs, 'DSD' AS Remarks, 4 AS priority
      FROM dsd_receiving WHERE ItemNo = ? GROUP BY ItemNo, Description
      UNION ALL
-     SELECT ItemNo, Description, (Qty * -1) AS QtyPCs, 'SALES' AS Remarks, 11 AS priority
+     SELECT ItemNo, Description, SUM(Qty * -1) AS QtyPCs, 'SALES' AS Remarks, 11 AS priority
      FROM sales WHERE ItemNo = ? GROUP BY ItemNo, Description
      UNION ALL
      SELECT itemno, description, ROUND(SUM(qty * -1), 2) AS QtyPCs, 'WASTE' AS Remarks, 10 AS priority
      FROM write_off WHERE ItemNo = ? GROUP BY itemno, description
      UNION ALL
-     SELECT itemno, description, Qty AS QtyPCs, 'STOCK' AS Remarks, 1 AS priority
+     SELECT itemno, description, SUM(Qty) AS QtyPCs, 'STOCK' AS Remarks, 1 AS priority
      FROM main_sheet WHERE ItemNo = ? GROUP BY itemno, description
      UNION ALL
-     SELECT itemno, description, opening AS QtyPCs, 'OPENING' AS Remarks, 2 AS priority
+     SELECT itemno, description, SUM(opening) AS QtyPCs, 'OPENING' AS Remarks, 2 AS priority
      FROM opening WHERE ItemNo = ? GROUP BY itemno, description
      UNION ALL
      SELECT itemno, description, SUM(qty * -1) AS QtyPCs, 'IST OUT' AS Remarks, 9 AS priority
@@ -67,7 +67,7 @@ export async function readData(item) {
      SELECT itemno, description, ROUND(SUM(qty * -1), 2) AS QtyPCs, 'SHORT' AS Remarks, 7 AS priority
      FROM short_claim WHERE ItemNo = ? GROUP BY itemno, description
      UNION ALL
-     SELECT itemno, description, qty AS QtyPCs, 'OVER' AS Remarks, 5 AS priority
+     SELECT itemno, description, SUM(qty) AS QtyPCs, 'OVER' AS Remarks, 5 AS priority
      FROM over_claim WHERE ItemNo = ? GROUP BY itemno, description
      UNION ALL
      SELECT itemno, description, SUM(qty * -1) AS QtyPCs, 'RTV' AS Remarks, 6 AS priority
